@@ -26,6 +26,7 @@ from urllib.parse import quote_plus
 import config
 import llm
 import referee
+import rewrite as rewrite_mod
 import search
 from referee import (
     CONTRADICTED,
@@ -90,6 +91,7 @@ class Report:
     results: list[ClaimResult]
     calls: dict
     stopped_early: str = ""
+    rewrite: object = None  # rewrite.Rewrite, or None if not requested
 
     @property
     def counts(self) -> dict:
@@ -103,7 +105,7 @@ class Meter:
     """Thread-safe call counter on top of referee.Budget. `reserve` keeps calls free
     for the rewrite step so claim checking cannot starve it."""
 
-    def __init__(self, budget: Budget, reserve: int = 1):
+    def __init__(self, budget: Budget, reserve: int = 2):
         self.budget = budget
         self.reserve = reserve
         self.by_kind: dict[str, int] = {}
@@ -259,8 +261,37 @@ def check_claim(claim: Claim, ctx: Ctx, kind: str = "other", section: str = "") 
             res.reason = res.attempts[-1].proposal.get("reason", "")
         parts.append(f"[freshness check: {res.freshness}]")
     res.trace = " ".join(parts)
-    ctx.emit({"type": "decision", "claim_id": claim.id, "verdict": dec.verdict, "trace": res.trace})
+    ctx.emit({"type": "decision", "claim_id": claim.id, "verdict": dec.verdict, "trace": res.trace,
+              "card": claim_card(res)})
     return res
+
+
+def claim_card(res: ClaimResult) -> dict:
+    """Everything the UI needs to draw one claim card and its evidence drawer."""
+    d = res.decision
+    return {
+        "id": res.claim.id, "text": res.claim.text, "entity": res.claim.entity,
+        "kind": res.kind, "section": res.section, "verdict": d.verdict,
+        "source_name": res.source_name, "source_url": d.source_url if d.verdict != UNVERIFIED else "",
+        "quote": d.quote if d.verdict != UNVERIFIED else "",
+        "freshness": res.freshness, "published_at": res.published_at, "reason": res.reason,
+        "rules": [list(r) for r in d.rules], "downgraded_from": d.downgraded_from,
+        "attempts": [
+            {"query": a.query, "from_date": a.from_date, "cached": a.cached, "n_results": a.n_results,
+             "error": a.search_error, "judge": a.proposal.get("verdict", ""), "referee": a.verdict}
+            for a in res.attempts
+        ],
+        "trace": res.trace,
+        "search_link": "https://www.google.com/search?q=" + quote_plus(res.claim.text),
+    }
+
+
+def attack(text: str, entity: str = "", *, today: dt.date | None = None, emit: Emit | None = None,
+           max_calls: int = 12) -> ClaimResult:
+    """Attack mode: check one claim typed by the user (plan, search, judge, referee, one retry)."""
+    meter = Meter(Budget(max_calls=max_calls), reserve=0)
+    ctx = Ctx(meter, emit or (lambda e: None), today or dt.date.today())
+    return check_claim(Claim("A1", text.strip(), entity.strip()), ctx)
 
 
 def _describe(att: Attempt, dec: Decision) -> str:
@@ -288,6 +319,7 @@ def run(
     emit: Emit | None = None,
     today: dt.date | None = None,
     audit_path=None,
+    do_rewrite: bool = True,
 ) -> Report:
     if not company and not briefing:
         raise ValueError("give a company name or a briefing")
@@ -318,6 +350,11 @@ def run(
                f"(numbers and dates first, then people and entities)",
     })
 
+    emit({
+        "type": "claims", "briefing": briefing, "drafted": drafted, "extracted": len(items),
+        "claims": [{"id": c.id, "text": c.text, "kind": k, "section": s} for c, k, s in chosen],
+    })
+
     def work(item: tuple[Claim, str, str]) -> ClaimResult:
         claim, kind, section = item
         return check_claim(claim, ctx, kind, section)
@@ -329,7 +366,12 @@ def run(
         stopped = f"call budget of {max_calls} reached: some claims were left unchecked (R4)"
         emit({"type": "info", "msg": stopped})
 
-    report = Report(run_id, company, briefing, drafted, len(items), results, dict(meter.by_kind), stopped)
+    rw = None
+    if do_rewrite:
+        rw = rewrite_mod.build(company, briefing, results, lambda what: meter.spend(what, reserve=False), emit)
+        if rw.error:
+            emit({"type": "info", "msg": rw.error})
+    report = Report(run_id, company, briefing, drafted, len(items), results, dict(meter.by_kind), stopped, rw)
     _write_audit(report, audit_path or AUDIT_PATH)
     return report
 
@@ -349,6 +391,7 @@ def report_record(report: Report) -> dict:
         "counts": report.counts,
         "calls": report.calls,
         "stopped_early": report.stopped_early,
+        "rewrite": _rewrite_record(report.rewrite),
         "claims": [
             {
                 "id": r.claim.id,
@@ -364,6 +407,19 @@ def report_record(report: Report) -> dict:
             }
             for r in report.results
         ],
+    }
+
+
+def _rewrite_record(rw) -> dict | None:
+    if rw is None:
+        return None
+    return {
+        "paragraphs": [{"section": p.section, "text": p.text, "claim_ids": p.claim_ids, "check": p.check}
+                       for p in rw.paragraphs],
+        "rejected_by_R9": rw.rejected,
+        "listed_not_rewritten": rw.fallback,
+        "dropped_sections": rw.dropped_sections,
+        "error": rw.error,
     }
 
 
@@ -485,6 +541,10 @@ def main(argv: list[str] | None = None) -> int:
     if report.drafted:
         print("\n--- DRAFT (from model memory, no web) ---\n" + report.briefing + "\n--- END DRAFT ---\n")
     print("\n" + render_text(report))
+    if report.rewrite is not None:
+        print("\n--- VERIFIED BRIEFING (rewritten; R9 checked every number and date) ---\n" + report.rewrite.markdown)
+        for bad in report.rewrite.rejected:
+            print(f"R9 refused a paragraph: {bad['reason']}")
     print(f"\n({time.time() - t0:.0f}s; audit appended to {AUDIT_PATH.name})")
     return 0
 

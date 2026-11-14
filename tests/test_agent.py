@@ -131,7 +131,7 @@ def test_run_end_to_end_mocked(mocks, monkeypatch, tmp_path):
         lambda text, max_claims=20: [llm.ClaimOut(text=CLAIM.text, entity="Stripe", kind="number")],
     )
     audit = tmp_path / "audit.jsonl"
-    report = agent.run("Stripe", today=TODAY, audit_path=audit)
+    report = agent.run("Stripe", today=TODAY, audit_path=audit, do_rewrite=False)
     assert report.counts[referee.SUPPORTED] == 1
     assert report.drafted
     record = json.loads(audit.read_text(encoding="utf-8").splitlines()[0])
