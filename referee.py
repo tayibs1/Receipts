@@ -91,12 +91,18 @@ def norm_url(url: str) -> str:
 
 
 def _fragments(quote: str) -> list[str]:
-    parts = re.split(r"\[?\.\.\.\]?|…", quote or "")
+    parts = re.split(r"\[?\.\.\.\]?|â€¦", quote or "")
     return [f for f in (norm(p) for p in parts) if f]
 
 
 def _contains(haystack_norm: str, needle_norm: str) -> bool:
     return f" {needle_norm} " in f" {haystack_norm} "
+
+
+def _has_fragment(haystack_norm: str, fragment_norm: str) -> bool:
+    """A quoted fragment must start at a word boundary; its last word may be cut
+    short (the judge's 300-character limit can end a quote mid-word)."""
+    return f" {fragment_norm}" in f" {haystack_norm}"
 
 
 def quote_in_content(quote: str, content: str) -> bool:
@@ -105,7 +111,7 @@ def quote_in_content(quote: str, content: str) -> bool:
     if not frags or sum(len(f) for f in frags) < MIN_QUOTE_CHARS:
         return False
     n = norm(content)
-    return all(_contains(n, f) for f in frags)
+    return all(_has_fragment(n, f) for f in frags)
 
 
 # ------------------------------------------------------- numbers and dates
@@ -190,8 +196,10 @@ _SCALE_WORDS = {"billion", "million", "thousand", "percent", "cent"}
 
 
 def _tokens(text: str) -> set[str]:
+    """Content words reduced to their first 5 letters, so 'departed' matches
+    'departure'."""
     words = re.findall(r"[a-z]{4,}", norm(text))
-    return {w for w in words if w not in _STOP and w not in _SCALE_WORDS}
+    return {w[:5] for w in words if w not in _STOP and w not in _SCALE_WORDS}
 
 
 def _overlap(claim_text: str, quote: str) -> float:
@@ -199,6 +207,32 @@ def _overlap(claim_text: str, quote: str) -> float:
     if not ct:
         return 1.0
     return len(ct & _tokens(quote)) / len(ct)
+
+
+# "well over $10 billion", "above 50%": the claim only sets a floor, so a larger
+# figure in the quote satisfies it. Only the number right after the word counts.
+_FLOOR = re.compile(
+    r"\b(?:well\s+)?(?:over|above|more than|at least|in excess of|exceed\w*|surpass\w*|topp\w*)\s+"
+    r"(?:\$|Â£|â‚¬)?\s*(\d[\d,.]*\s*(?:billion|million|thousand|bn|mn|%|percent|per cent|[bmk](?![a-z]))?)",
+    re.I,
+)
+
+
+def _missing_specifics(claim_text: str, quote: str) -> set[tuple]:
+    """Numbers and dates in the claim that the quote does not carry. A floor
+    ("over $10B") is met by a larger figure of the same kind; years never are."""
+    missing = specifics(claim_text) - specifics(quote)
+    if not missing:
+        return missing
+    in_quote = specifics(quote)
+    for m in _FLOOR.finditer(claim_text or ""):
+        for spec in specifics(m.group(1)):
+            if spec in missing and spec[0] in ("num", "pct") and not (
+                spec[0] == "num" and 1900 <= spec[1] <= 2100 and float(spec[1]).is_integer()
+            ):
+                if any(q[0] == spec[0] and q[1] >= spec[1] for q in in_quote):
+                    missing.discard(spec)
+    return missing
 
 
 def _context_sentences(content: str, quote: str) -> list[str]:
@@ -209,10 +243,10 @@ def _context_sentences(content: str, quote: str) -> list[str]:
     sents = re.split(r"(?<=[.!?])\s+", content or "")
     out: list[str] = []
     for s in sents:
-        if not any(_contains(norm(s), f) for f in frags):
+        if not any(_has_fragment(norm(s), f) for f in frags):
             continue
         clauses = re.split(r"[;:]|,\s+(?:but|while|although|though|whereas)\b", s)
-        hit = [c for c in clauses if any(_contains(norm(c), f) for f in frags)]
+        hit = [c for c in clauses if any(_has_fragment(norm(c), f) for f in frags)]
         out.extend(hit or [s])
     return out or [quote]
 
@@ -255,13 +289,23 @@ def decide(
     if claim.entity and not _contains(norm(source.content), norm(claim.entity)):
         return fail("R8", f"source never mentions {claim.entity!r}")
     need = OVERLAP_SUPPORTED if proposal.verdict == SUPPORTED else OVERLAP_CONTRADICTED
-    got = _overlap(claim.text, proposal.quote)
-    if got < need:
+    # Words are matched in the quote and the clause around it (a quote can be a table
+    # row or start with "She"). A claim with two or more numbers or dates that all
+    # appear in the quote plus one shared content word is also relevant.
+    rel_text = proposal.quote + " " + " ".join(_context_sentences(source.content, proposal.quote))
+    got = _overlap(claim.text, rel_text)
+    anchored = (
+        proposal.verdict == SUPPORTED
+        and len(specifics(claim.text)) >= 2
+        and not _missing_specifics(claim.text, proposal.quote)
+        and bool(_tokens(claim.text) & _tokens(rel_text))
+    )
+    if got < need and not anchored:
         return fail("R8", f"quote covers {got:.0%} of the claim's key words, need {need:.0%}")
-    d.rules.append(("R8", "relevance ok"))
+    d.rules.append(("R8", "relevance ok" if got >= need else "relevance ok (numbers and dates anchor it)"))
 
     if proposal.verdict == SUPPORTED:
-        missing = specifics(claim.text) - specifics(proposal.quote)
+        missing = _missing_specifics(claim.text, proposal.quote)
         if missing:
             return fail("R2", f"numbers or dates in the claim not in the quote: {sorted(missing)}")
         d.rules.append(("R2", "numbers and dates match"))

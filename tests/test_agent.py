@@ -106,6 +106,13 @@ def test_freshness_labels():
     assert agent.freshness_label("not a date", TODAY) == "date unknown"
 
 
+def test_search_window_skips_the_date_filter_for_past_year_claims():
+    assert agent.search_window_start("ChatGPT launched in November 2022", TODAY) is None
+    assert agent.search_window_start("Acme was valued at $18B in early 2024", TODAY) is None
+    assert agent.search_window_start("Acme's CEO is Jane Roe", TODAY) == dt.date(2026, 8, 16)
+    assert agent.search_window_start("Acme raised $5B in 2026", TODAY) == dt.date(2026, 8, 16)
+
+
 def test_rank_puts_numbers_and_dates_first():
     items = [
         (Claim("1", "Acme is a leader in widgets"), "other", ""),

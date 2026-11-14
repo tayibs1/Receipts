@@ -167,8 +167,10 @@ def plan_query(claim_text: str, entity: str, today: str) -> str:
     system = "You write web search queries. Reply with JSON only."
     user = (
         f"Today is {today}. Write one web search query that would find a recent, authoritative source "
-        "to check this claim. 4 to 10 words, name the entity, add the current year if the claim is "
-        "time-sensitive, do not copy the claim word for word, no quotes or operators.\n"
+        "to check this claim. 4 to 10 words, name the entity, do not copy the claim word for word, "
+        "no quotes or operators. If the claim names a past year, use that year and do not add the "
+        "current year. Add the current year only for claims about the present state "
+        "(who leads the company now, total raised, current valuation).\n"
         f"Claim: {claim_text}\nEntity: {entity or 'unknown'}\n"
         'Reply as {"query": "..."}.'
     )
@@ -231,7 +233,8 @@ def judge(claim_text: str, entity: str, today: str, hits: Sequence) -> JudgeOut:
         "(a different figure, a different person in the role, an event that did not happen).\n"
         '- "unverified": anything else, including rumours, plans, partial matches, or no relevant result.\n'
         f'"quote": copy words verbatim from the chosen result\'s content, at most {MAX_QUOTE_CHARS} characters. '
-        'Do not paraphrase or fix spelling. You may join two fragments with "...". Empty if unverified.\n'
+        'Do not paraphrase or fix spelling. You may join two fragments with "...". End the quote at a '
+        "word boundary, never mid-word. Empty if unverified.\n"
         "Choose a quote that contains the claim's own figures and dates (including the year) when the "
         "result gives them; a quote that leaves out a number or date from the claim cannot support it.\n"
         '"source_url": the exact url of that result. Empty if unverified.\n'

@@ -13,6 +13,7 @@ import argparse
 import datetime as dt
 import json
 import logging
+import re
 import sys
 import threading
 import time
@@ -141,6 +142,18 @@ def rank_claims(items: list[tuple[Claim, str, str]]) -> list[tuple[Claim, str, s
     return [item for _, item in indexed]
 
 
+_YEAR = re.compile(r"\b(19|20)\d{2}\b")
+
+
+def search_window_start(claim_text: str, today: dt.date) -> dt.date | None:
+    """First search only looks at the last 90 days, unless the claim is about a
+    past year: then a recent-news filter would hide the very page that proves it
+    (found at the first checkpoint: 'ChatGPT launched in November 2022')."""
+    if any(int(m.group(0)) < today.year for m in _YEAR.finditer(claim_text)):
+        return None
+    return today - dt.timedelta(days=SEARCH_WINDOW_DAYS)
+
+
 def freshness_label(published_at: str | None, today: dt.date) -> str:
     """A freshness check from the source's own published_at; never 'date verified'."""
     if not published_at:
@@ -213,7 +226,7 @@ def check_claim(claim: Claim, ctx: Ctx, kind: str = "other", section: str = "") 
         ctx.meter.spend("plan")
         q1 = llm.plan_query(claim.text, claim.entity, str(ctx.today))
         parts.append(f'query "{q1}"')
-        att, dec, hits = _attempt(claim, q1, ctx.today - dt.timedelta(days=SEARCH_WINDOW_DAYS), ctx)
+        att, dec, hits = _attempt(claim, q1, search_window_start(claim.text, ctx.today), ctx)
         res.attempts.append(att)
         parts.append(_describe(att, dec))
 

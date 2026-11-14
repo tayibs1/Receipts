@@ -36,6 +36,62 @@ def test_modal_may_still_blocks_a_fact_claim():
     assert d.verdict == UNVERIFIED and d.rules[-1][0] == "R7"
 
 
+# ------------------------------------- fixes from the first real-data checkpoint (#8)
+
+def test_floor_claim_is_met_by_a_larger_figure():
+    q = "Acme has raised about $25 billion in equity across 13 rounds"
+    d = run("Acme has raised well over $10 billion in total", SUPPORTED, q, q + ".")
+    assert d.verdict == SUPPORTED, d.rules
+
+
+def test_floor_claim_is_not_met_by_a_smaller_figure():
+    q = "Acme has raised about $4 billion in equity across 3 rounds"
+    d = run("Acme has raised well over $10 billion in total", SUPPORTED, q, q + ".")
+    assert d.verdict == UNVERIFIED and d.rules[-1][0] == "R2"
+
+
+def test_floor_never_applies_to_years():
+    q = "Acme crossed a $100 billion valuation in 2026, the company said"
+    d = run("Acme crossed a valuation above $100 billion in 2025", SUPPORTED, q, q + ".")
+    assert d.verdict == UNVERIFIED and d.rules[-1][0] == "R2"
+
+
+def test_exact_claim_is_not_loosened_by_a_larger_figure():
+    q = "Acme has raised about $25 billion in equity across 13 rounds"
+    d = run("Acme has raised $10 billion in total", SUPPORTED, q, q + ".")
+    assert d.verdict == UNVERIFIED and d.rules[-1][0] == "R2"
+
+
+def test_word_forms_match_by_stem():
+    q = "She announced her departure from Acme on September 25, 2024"
+    d = run("Jane Roe departed Acme in 2024", SUPPORTED, q, "Jane Roe is a former CTO. " + q + ".")
+    assert d.verdict == SUPPORTED, d.rules
+
+
+def test_table_row_is_relevant_when_numbers_and_dates_all_match():
+    q = "June 14, 2023 | Seed | 105 million | Lightspeed"
+    d = run("Acme raised a seed round of roughly 105 million in mid-2023", SUPPORTED, q,
+            "Acme funding | " + q + " |")
+    assert d.verdict == SUPPORTED, d.rules
+
+
+def test_unrelated_quote_with_one_matching_number_is_still_rejected():
+    q = "Revenue was 105 million last year"
+    d = run("Acme raised a seed round of roughly 105 million in mid-2023", SUPPORTED, q,
+            "Acme annual report. " + q + ".")
+    assert d.verdict == UNVERIFIED and d.rules[-1][0] in ("R8", "R2")
+
+
+def test_quote_cut_mid_word_at_the_end_is_still_verbatim():
+    content = "Acme is an artificial intelligence company based in Paris, that builds open-weight foundation models."
+    assert quote_in_content("Acme is an artificial intelligence company based in Paris, that builds open-weight fou", content)
+
+
+def test_quote_starting_mid_word_is_rejected():
+    content = "Acme is an artificial intelligence company based in Paris."
+    assert not quote_in_content("ficial intelligence company based in Paris", content)
+
+
 # ---------------------------------------------------------------- happy paths
 
 def test_supported_when_quote_matches_and_numbers_match():
