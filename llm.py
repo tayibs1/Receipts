@@ -247,6 +247,10 @@ def judge(claim_text: str, entity: str, today: str, hits: Sequence) -> JudgeOut:
         '- "contradicted": a result directly states something incompatible with the claim '
         "(a different figure, a different person in the role, an event that did not happen).\n"
         '- "unverified": anything else, including rumours, plans, partial matches, or no relevant result.\n'
+        "Time matters. A claim about a specific past period (\"was growing 50% in 2024\", \"raised $3.5B in "
+        "March 2025\") is contradicted only by a source about that same period; a source describing a "
+        "different period does not contradict it, so answer unverified. A present-tense claim (\"is\", "
+        "\"has\", \"most recent\", \"total\") is judged against the latest information in the results.\n"
         f'"quote": copy words verbatim from the chosen result\'s content, at most {MAX_QUOTE_CHARS} characters. '
         'Do not paraphrase or fix spelling. You may join two fragments with "...". End the quote at a '
         "word boundary, never mid-word. Empty if unverified.\n"
