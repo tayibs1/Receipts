@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receipts: label the claims</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .lrow { background: var(--white); border: 1px solid var(--line); border-radius: 8px; padding: 16px; display: grid; gap: 8px; }
+    .lrow.done { border-left: 4px solid var(--ok-ink); }
+    .opts { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+    .opts label { margin: 0; display: flex; gap: 8px; align-items: center; color: var(--ink); font-size: var(--b); }
+    .opts input[type=text] { flex: 1 1 200px; }
+    .saved { font-size: var(--s); color: var(--ok-ink); min-width: 80px; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><h1>Label the claims</h1><span class="tagline">Receipts: no receipt, no claim.</span></div>
+    <span class="badge" id="progress">Loading</span>
+  </header>
+  <div id="banner" class="banner" role="alert" hidden></div>
+  <main>
+    <section class="panel">
+      <p><b>Before you start:</b> do not look at any Receipts result yet. Label each claim from the real world as of today,
+      by reading sources yourself. <b>true</b> = the claim is correct. <b>false</b> = it is wrong or out of date.
+      <b>unknowable</b> = public sources do not settle it. Be honest: a wrong label makes the measured error rates meaningless.</p>
+      <p class="muted">A saved label cannot be changed without confirming; every change is logged to <code>eval/label_changes.log</code>
+      and must be disclosed. The link only opens a web search; it is not an answer.</p>
+      <label for="who">Your name (recorded as the labeller)</label>
+      <input id="who" type="text" maxlength="40" placeholder="Your name">
+    </section>
+    <div id="rows"></div>
+  </main>
+  <script src="label.js"></script>
+</body>
+</html>

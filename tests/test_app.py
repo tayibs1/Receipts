@@ -67,6 +67,45 @@ def test_errors_reach_the_stream_in_plain_words(monkeypatch):
     assert client.post("/api/run", json={"company": ""}).status_code == 400
 
 
+@pytest.fixture
+def label_sheet(monkeypatch, tmp_path):
+    import csv
+
+    sheet, log = tmp_path / "label_sheet.csv", tmp_path / "label_changes.log"
+    with open(sheet, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=app_mod.LABEL_FIELDS)
+        w.writeheader()
+        w.writerow({"key": "Acme|1", "company": "Acme", "claim_id": "1", "claim": "Acme was founded in 2001",
+                    "system_source_url": "", "search_link": "https://www.google.com/search?q=x",
+                    "label": "", "labeller": "", "labelled_at": "", "notes": ""})
+    monkeypatch.setattr(app_mod, "LABELS", sheet)
+    monkeypatch.setattr(app_mod, "LABEL_LOG", log)
+    return sheet, log
+
+
+def test_labels_are_saved_and_never_show_a_verdict(label_sheet):
+    rows = client.get("/api/labels").json()
+    assert rows[0]["claim"] == "Acme was founded in 2001" and "verdict" not in rows[0]
+    r = client.post("/api/label", json={"key": "Acme|1", "label": "true", "labeller": "Sam"})
+    assert r.json() == {"saved": True, "labelled": 1, "of": 1}
+    saved = client.get("/api/labels").json()[0]
+    assert saved["label"] == "true" and saved["labeller"] == "Sam" and saved["labelled_at"]
+
+
+def test_changing_a_label_needs_confirmation_and_is_logged(label_sheet):
+    sheet, log = label_sheet
+    client.post("/api/label", json={"key": "Acme|1", "label": "true", "labeller": "Sam"})
+    r = client.post("/api/label", json={"key": "Acme|1", "label": "false", "labeller": "Sam"})
+    assert r.status_code == 409 and not log.exists()
+    r = client.post("/api/label", json={"key": "Acme|1", "label": "false", "labeller": "Sam", "change": True})
+    assert r.status_code == 200 and "true -> false" in log.read_text(encoding="utf-8")
+
+
+def test_bad_labels_and_unknown_keys_are_rejected(label_sheet):
+    assert client.post("/api/label", json={"key": "Acme|1", "label": "maybe", "labeller": "Sam"}).status_code == 422
+    assert client.post("/api/label", json={"key": "Nope|9", "label": "true", "labeller": "Sam"}).status_code == 404
+
+
 def test_attack_returns_a_card(monkeypatch):
     res = agent.ClaimResult(claim=Claim("A1", "Acme was founded in 2001", "Acme"),
                             decision=Decision("A1", referee.UNVERIFIED))

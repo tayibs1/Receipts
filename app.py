@@ -90,6 +90,69 @@ def health(refresh: bool = False):
     return _health["value"]
 
 
+# ------------------------------------------------------------------- labels
+# A small page (static/label.html) for the human to hand-label the pinned claims.
+# It shows no verdicts. A label, once set, can only be changed with change=true and
+# every change is logged to eval/label_changes.log (a disclosed trial, never silent).
+
+LABELS = config.ROOT / "eval" / "label_sheet.csv"
+LABEL_LOG = config.ROOT / "eval" / "label_changes.log"
+LABEL_FIELDS = ["key", "company", "claim_id", "claim", "system_source_url", "search_link",
+                "label", "labeller", "labelled_at", "notes"]
+_label_lock = threading.Lock()
+
+
+class LabelRequest(BaseModel):
+    key: str = Field(..., max_length=120)
+    label: str = Field(..., pattern="^(true|false|unknowable)$")
+    labeller: str = Field(..., min_length=1, max_length=40)
+    notes: str = Field("", max_length=300)
+    change: bool = False
+
+
+def _read_labels() -> list[dict]:
+    import csv
+
+    with open(LABELS, encoding="utf-8-sig", newline="") as f:
+        return list(csv.DictReader(f))
+
+
+@app.get("/api/labels")
+def get_labels():
+    if not LABELS.exists():
+        return JSONResponse({"error": "eval/label_sheet.csv does not exist. Run eval/run.py first."}, status_code=404)
+    with _label_lock:
+        return _read_labels()
+
+
+@app.post("/api/label")
+def set_label(req: LabelRequest):
+    import csv
+    import datetime as dt
+
+    with _label_lock:
+        rows = _read_labels()
+        row = next((r for r in rows if r["key"] == req.key), None)
+        if row is None:
+            return JSONResponse({"error": "Unknown claim key."}, status_code=404)
+        old = (row["label"] or "").strip()
+        if old and old != req.label and not req.change:
+            return JSONResponse({"error": f'Already labelled "{old}". Changing a label is a disclosed trial: confirm it.'},
+                                status_code=409)
+        now = dt.datetime.now().isoformat(timespec="seconds")
+        if old and old != req.label:
+            with open(LABEL_LOG, "a", encoding="utf-8") as log_file:
+                log_file.write(f"{now}\t{req.key}\t{old} -> {req.label}\tby {req.labeller}\n")
+        row.update(label=req.label, labeller=req.labeller.strip(), labelled_at=now, notes=req.notes.strip())
+        tmp = LABELS.with_suffix(".tmp")
+        with open(tmp, "w", encoding="utf-8-sig", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=LABEL_FIELDS)
+            w.writeheader()
+            w.writerows(rows)
+        tmp.replace(LABELS)
+        return {"saved": True, "labelled": sum(1 for r in rows if (r["label"] or "").strip()), "of": len(rows)}
+
+
 # ------------------------------------------------------------------ samples
 
 @app.get("/api/sample")
