@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Receipts: no receipt, no claim</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Receipts</h1>
+      <span class="tagline">No receipt, no claim.</span>
+    </div>
+    <div class="badges" aria-label="Status">
+      <span class="badge" id="badge-anthropic">Anthropic: checking</span>
+      <span class="badge" id="badge-linkup">Linkup: checking</span>
+      <span class="badge" id="badge-mode" hidden></span>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" role="alert" hidden></div>
+
+  <main>
+    <section id="input" class="panel" aria-labelledby="input-h">
+      <h2 id="input-h">Check an AI-written briefing</h2>
+      <p class="muted">We search the live web and keep only what has a source and a quote that really appears in it.</p>
+      <label for="company">Company name (we draft a briefing from the model's memory, then check it)</label>
+      <div class="row">
+        <input id="company" type="text" maxlength="80" placeholder="e.g. Databricks" autocomplete="off">
+        <span class="chips" id="chips"></span>
+      </div>
+      <label for="briefing">or paste an AI-written briefing</label>
+      <textarea id="briefing" rows="7" maxlength="8000" placeholder="Paste the briefing here"></textarea>
+      <div class="row">
+        <button id="go" class="primary" type="button">Check it</button>
+        <button id="sample" class="link" type="button">Use sample briefing</button>
+        <span id="sample-note" class="muted"></span>
+      </div>
+    </section>
+
+    <section id="empty" class="panel empty">
+      <h2>Nothing checked yet</h2>
+      <p class="muted">Enter a company or paste a briefing. Claims appear here one by one with their receipts, and anything without a receipt is flagged, never guessed.</p>
+    </section>
+
+    <section id="run" hidden>
+      <div class="strip" aria-live="polite">
+        <span id="progress">Starting</span>
+        <span id="meter" class="muted"></span>
+      </div>
+      <div class="cols">
+        <div class="col" id="memory-col">
+          <h2>What the AI says from memory</h2>
+          <pre id="memory-text" class="memory"></pre>
+          <ul id="claim-chips" class="claim-chips"></ul>
+        </div>
+        <div class="col" id="receipts-col">
+          <h2>What survives with receipts</h2>
+          <div id="live-cards"></div>
+        </div>
+      </div>
+      <details class="panel trace" id="trace-panel" open>
+        <summary>Trace: one line per decision</summary>
+        <ol id="trace"></ol>
+      </details>
+    </section>
+
+    <section id="result" hidden>
+      <div class="counts" id="counts" role="status"></div>
+      <p id="sample-flag" class="note" hidden></p>
+      <div id="groups"></div>
+
+      <div class="panel" id="attack">
+        <h2>Attack mode</h2>
+        <p class="muted">Type any claim to check it against the live web.</p>
+        <div class="row">
+          <input id="attack-claim" type="text" maxlength="400" placeholder="e.g. Databricks raised $10 billion in 2024">
+          <button id="attack-go" class="primary" type="button">Check</button>
+        </div>
+        <div id="attack-out"></div>
+      </div>
+
+      <div class="panel" id="rewrite" hidden>
+        <h2>The briefing, rewritten with receipts</h2>
+        <div class="tabs" role="tablist">
+          <button id="tab-verified" role="tab" aria-selected="true" class="tab on" type="button">Verified briefing</button>
+          <button id="tab-diff" role="tab" aria-selected="false" class="tab" type="button">What changed</button>
+        </div>
+        <div id="verified"></div>
+        <div id="diff" hidden></div>
+        <div class="row">
+          <button id="copy-md" class="primary" type="button">Copy as Markdown</button>
+          <button id="download" class="secondary" type="button">Download receipt pack</button>
+          <span id="copy-note" class="muted"></span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside id="drawer" class="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-h" hidden>
+    <div class="drawer-head">
+      <h2 id="drawer-h">Evidence</h2>
+      <button id="drawer-close" class="link" type="button">Close</button>
+    </div>
+    <div id="drawer-body"></div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
