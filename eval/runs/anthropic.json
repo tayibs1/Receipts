@@ -1,0 +1,589 @@
+{
+  "run_id": "74ea1399",
+  "briefing": "ANTHROPIC: PRE-CALL BRIEFING\n\nNote: This is written from my own knowledge, which has a cutoff date. Figures and recent developments may be out of date, so verify anything critical before quoting it on the call.\n\nOVERVIEW\nAnthropic is an AI safety and research company based in San Francisco, founded in 2021. It is structured as a public benefit corporation, and its stated mission is building reliable, interpretable, and steerable AI systems. It sells primarily to enterprises and developers through an API and also runs a consumer-facing assistant. Safety positioning is a core part of its brand and a common selling point with regulated industries.\n\nLEADERSHIP\nDario Amodei is CEO and Daniela Amodei is President. Both were previously at OpenAI before co-founding Anthropic with a group of other former OpenAI researchers, including Jared Kaplan, Jack Clark, Sam McCandlish, Tom Brown, and Chris Olah. Mike Krieger, co-founder of Instagram, joined as Chief Product Officer in 2024.\n\nFUNDING AND FINANCIALS\nAnthropic has raised well over $10 billion in total. Amazon has committed up to $8 billion, and Google has invested around $2 billion or more. Other investors include Spark Capital, Menlo Ventures, and Lightspeed. Valuation has climbed steeply: roughly $18 billion in early 2024, then reportedly $60 billion or more by 2025, with later rounds reportedly higher. Annualized revenue was reported in the low single-digit billions in 2024 to 2025 and growing quickly, driven largely by API and enterprise usage. Treat any specific number as approximate.\n\nPRODUCTS\nClaude is the core model family, offered in tiers (Haiku, Sonnet, Opus) that trade speed and cost against capability. Access comes through the Claude app, Claude API, and cloud platforms including Amazon Bedrock and Google Cloud Vertex AI. Claude Code is a coding agent for developers. Team and Enterprise plans add admin controls and security features. Key differentiators typically cited are long context windows, coding strength, and strong safety practices.\n\nRECENT NEWS\nThemes I'm aware of: frequent new Claude model releases, rapid enterprise adoption, expanded agentic and coding tools, and ongoing debate about AI regulation, where Anthropic is a vocal participant. Check recent headlines for anything newer.",
+  "ts": "2026-11-14T22:46:21",
+  "company": "Anthropic",
+  "briefing_drafted_by_model": true,
+  "claims_extracted": 20,
+  "claims_checked": 8,
+  "counts": {
+    "supported": 3,
+    "contradicted": 0,
+    "forward_looking": 0,
+    "unverified": 5
+  },
+  "calls": {
+    "draft": 1,
+    "extract": 1,
+    "plan": 14,
+    "search": 12,
+    "judge": 14
+  },
+  "stopped_early": "",
+  "claims": [
+    {
+      "id": "1",
+      "text": "Anthropic is an AI safety and research company based in San Francisco.",
+      "entity": "Anthropic",
+      "kind": "entity",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "",
+      "quote": "",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Anthropic AI company headquarters San Francisco 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://signalnewsatlanta.com/press-releases/205549/san-francisco-foundation-and-anthropic-announce-50-million-commitment-to-bay-area-families-and-neighbors-through-2027/",
+            "quote": "Anthropic is an AI research and development company that creates reliable, interpretable, and steerable AI systems.",
+            "reason": "Results state Anthropic is an AI research company with its headquarters in San Francisco, and describe its aim of 'safer AI systems', which matches the claim."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 40% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Anthropic announces press release company overview AI safety research",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "Results confirm Anthropic describes itself as an AI safety and research company, but none state that it is based in San Francisco."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "text": "Anthropic was founded in 2021.",
+      "entity": "Anthropic",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.whobrands.com/companies/anthropic",
+      "quote": "Dario Amodei and Daniela Amodei founded Anthropic in 2021.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Anthropic founding date company history 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.whobrands.com/companies/anthropic",
+            "quote": "Dario Amodei and Daniela Amodei founded Anthropic in 2021.",
+            "reason": "Several results explicitly state that Anthropic was founded in 2021 by the Amodeis."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "text": "Mike Krieger joined Anthropic as Chief Product Officer in 2024.",
+      "entity": "Anthropic",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.layer3labs.io/guides/who-is-mike-krieger",
+      "quote": "Anthropic announced on May 15, 2024, that it had hired Mike Krieger as its first Chief Product Officer (CPO) to lead product engineering, product management and product design.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Anthropic Mike Krieger Chief Product Officer role 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.layer3labs.io/guides/who-is-mike-krieger",
+            "quote": "Anthropic announced on May 15, 2024, that it had hired Mike Krieger as its first Chief Product Officer (CPO) to lead product engineering, product management and product design.",
+            "reason": "The result states that Krieger was hired as Anthropic's Chief Product Officer in May 2024."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "text": "Anthropic has raised well over $10 billion in total funding.",
+      "entity": "Anthropic",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+        ]
+      ],
+      "source_url": "https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-becomes-worlds-most-valuable-ai-startup-at-965-billion/",
+      "quote": "Anthropic raised $65 billion in a Series H funding round that valued the company at $965 billion post-money... up from the $380 billion valuation it achieved in a February Series G funding round in which it raised $30 billion",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Anthropic total funding raised 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/anthropic-funding",
+            "quote": "Anthropic has raised more than $120 billion in equity since 2021.",
+            "reason": "The result states Anthropic raised more than $120 billion in equity, which is well over $10 billion, and other results report totals of $111.5B and $116.1B."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 40% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Anthropic announces funding round valuation press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.pymnts.com/news/artificial-intelligence/2026/anthropic-becomes-worlds-most-valuable-ai-startup-at-965-billion/",
+            "quote": "Anthropic raised $65 billion in a Series H funding round that valued the company at $965 billion post-money... up from the $380 billion valuation it achieved in a February Series G funding round in which it raised $30 billion",
+            "reason": "Results report single rounds of $65B, $30B, and $13B, so total funding clearly exceeds well over $10 billion."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "text": "Amazon has committed up to $8 billion to Anthropic.",
+      "entity": "Amazon",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "https://www.newsbeep.com/ie/409327/",
+      "quote": "These will join the $8 billion Amazon already invested in Anthropic, per the release.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Amazon Anthropic investment billion 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "The results describe an initial $4 billion commitment in 2023, a further $4 billion in 2024, and later investments totaling about $18 billion, but none state a single \"up to $8 billion\" commitment as the claim's fact."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        },
+        {
+          "query": "Amazon announces investment in Anthropic press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": true,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "https://www.newsbeep.com/ie/409327/",
+            "quote": "These will join the $8 billion Amazon already invested in Anthropic, per the release.",
+            "reason": "The results say Amazon has already invested $8 billion (and has since pledged more), but none describes a commitment of 'up to $8 billion', so the claim's framing is not directly stated."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "text": "Google has invested around $2 billion or more in Anthropic.",
+      "entity": "Google",
+      "kind": "number",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://techfyle.com/anthropics-value-jumps-on-googles-40b-investment/",
+      "quote": "That year, **Google** invested **$300 million (€276.9 million)** for approximately **10%** of the company. Months later, **Google** added another **$2 billion (€1.84 billion)**.",
+      "freshness": "date unknown",
+      "attempts": [
+        {
+          "query": "Google investment in Anthropic billion 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.fxleaders.com/news/2026/11/12/goog-stock-recovers-but-faces-300-as-google-commits-10-billion-to-anthropic/",
+            "quote": "Google's $10 billion investment in Anthropic highlights its commitment to expanding computing capabilities",
+            "reason": "The result states Google's $10 billion investment in Anthropic as fact, which exceeds the claimed 'around $2 billion or more'."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2000000000.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Anthropic announces Google investment funding round press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://techfyle.com/anthropics-value-jumps-on-googles-40b-investment/",
+            "quote": "That year, **Google** invested **$300 million (€276.9 million)** for approximately **10%** of the company. Months later, **Google** added another **$2 billion (€1.84 billion)**.",
+            "reason": "The result states Google invested $300 million and then another $2 billion in Anthropic, and other results report a further commitment of up to $40 billion, so the total exceeds $2 billion."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "text": "Anthropic was valued at roughly $18 billion in early 2024.",
+      "entity": "Anthropic",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "",
+      "quote": "",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Anthropic valuation funding round 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.useluminix.com/reports/company-overviews/anthropic-revenue-and-burn-rate/source/4",
+            "quote": "| Series D | Early 2024 | $750 million | $18.4 billion | Menlo Ventures |",
+            "reason": "A result lists a Series D in early 2024 at a $18.4 billion post-money valuation, consistent with the claim's roughly $18 billion in early 2024."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 25% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Anthropic Series E funding announcement valuation press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "None of the results state Anthropic's valuation in early 2024; they cover the March 2025 Series E ($61.5B) and later rounds, so the $18B figure is neither confirmed nor contradicted."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "text": "Anthropic was reportedly valued at $60 billion or more by 2025.",
+      "entity": "Anthropic",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "",
+      "quote": "",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Anthropic valuation funding round 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": true,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.useluminix.com/reports/company-overviews/anthropic-revenue-and-burn-rate/source/4",
+            "quote": "Series E | Mar 3, 2025 | $3.5 billion | $61.5 billion | Lightspeed",
+            "reason": "The funding table shows a March 2025 Series E at a $61.5 billion post-money valuation, which is $60 billion or more in 2025."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 0% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Anthropic announces funding round led by investors valuation billion",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "The results report 2025-era valuations of $183B (September 2025) and $180B, and 2026 valuations of $380B and $965B; none states a $60B+ valuation reported by 2025 in the claim's own terms."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    }
+  ]
+}

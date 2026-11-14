@@ -1,0 +1,625 @@
+{
+  "run_id": "094e071d",
+  "briefing": "MISTRAL AI: PRE-CALL BRIEFING\n\nNote: This is written from memory, and my knowledge has a cutoff. Funding, valuation, and product details move fast, so verify anything numeric before quoting it on the call.\n\nOVERVIEW\nMistral AI is a Paris-based AI company founded in April 2023. It builds large language models and positions itself as Europe's leading AI lab and a credible alternative to US providers like OpenAI and Anthropic. Its identity rests on two themes: efficient, high-performing models, and openness (many models released under permissive licenses, though flagship models are often commercial). It also leans on European data sovereignty as a selling point, which resonates with regulated industries and governments.\n\nLEADERSHIP\nThree co-founders, all with strong research pedigrees. Arthur Mensch (CEO) came from Google DeepMind. Guillaume Lample (Chief Scientist) and Timothée Lacroix (CTO) came from Meta, where Lample worked on LLaMA. Expect the CEO to be the public face and a frequent voice on European tech policy.\n\nFUNDING AND FINANCIALS\nRaised a record roughly 105M euro seed in mid-2023, followed by a Series A in late 2023 (around 385M euro, valuing the company near 2B dollars). A 2024 round reportedly reached about 6B dollars valuation, with Microsoft involved in a strategic partnership and investment. Later reports pointed to a significantly larger round with ASML as a major investor and a valuation well above 10B euro. I'm unsure of exact figures and revenue, so confirm current numbers rather than citing mine.\n\nPRODUCTS\nOpen-weight models such as Mistral 7B and Mixtral (mixture-of-experts). Commercial models including Mistral Large, Medium, and Small, plus Codestral for code. Le Chat, its consumer and business assistant. La Plateforme, its API offering. Enterprise options include self-hosted and private deployment, which is a key differentiator for security-conscious buyers.\n\nRECENT NEWS\nMy information on recent developments may be stale. Check current headlines for new model releases, partnerships, funding announcements, and European AI regulation commentary before the call. If useful, open by asking what prompted their interest in a European, deployable-on-your-own-infrastructure option.",
+  "ts": "2026-11-14T22:46:53",
+  "company": "Mistral AI",
+  "briefing_drafted_by_model": true,
+  "claims_extracted": 19,
+  "claims_checked": 8,
+  "counts": {
+    "supported": 4,
+    "contradicted": 0,
+    "forward_looking": 0,
+    "unverified": 4
+  },
+  "calls": {
+    "draft": 1,
+    "extract": 1,
+    "plan": 14,
+    "search": 14,
+    "judge": 14
+  },
+  "stopped_early": "",
+  "claims": [
+    {
+      "id": "1",
+      "text": "Mistral AI is a Paris-based AI company.",
+      "entity": "Mistral AI",
+      "kind": "entity",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.lemonde.fr/en/economy/article/2026/10/06/mistral-ai-unveils-new-ai-model-aimed-at-narrowing-the-gap-with-top-chinese-competitors_6758318_19.html",
+      "quote": "Arthur Mensch, co-founder and CEO of Mistral AI, at the company's offices in Paris, on September 22, 2026.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Mistral AI headquarters Paris company 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.layer3labs.io/guides/mistral-ai-explained",
+            "quote": "Mistral AI is an artificial intelligence (AI) company based in Paris, France, that builds open-weight and commercial foundation models for enterprise and developer use.",
+            "reason": "The result directly states Mistral AI is an AI company based in Paris, France."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote not found in the source, or too short"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI announces Paris office press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.lemonde.fr/en/economy/article/2026/10/06/mistral-ai-unveils-new-ai-model-aimed-at-narrowing-the-gap-with-top-chinese-competitors_6758318_19.html",
+            "quote": "Arthur Mensch, co-founder and CEO of Mistral AI, at the company's offices in Paris, on September 22, 2026.",
+            "reason": "Le Monde places Mistral AI's offices in Paris and calls it a French start-up, consistent with the claim of a Paris-based AI company."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "text": "Mistral AI was founded in April 2023.",
+      "entity": "Mistral AI",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://thelatentdaily.com/articles/mistral-ai-company-profile/",
+      "quote": "Mistral AI was founded in Paris in April 2023 by Arthur Mensch, Guillaume Lample and Timothée Lacroix.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Mistral AI founding date company history 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://thelatentdaily.com/articles/mistral-ai-company-profile/",
+            "quote": "Mistral AI was founded in Paris in April 2023 by Arthur Mensch, Guillaume Lample and Timothée Lacroix.",
+            "reason": "Multiple results state explicitly that Mistral AI was founded in April 2023."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "text": "Arthur Mensch is the CEO of Mistral AI.",
+      "entity": "Arthur Mensch",
+      "kind": "person",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://news.microsoft.com/source/2026/07/21/microsoft-and-mistral-expand-strategic-partnership-to-give-enterprises-and-regulated-industries-frontier-ai-they-can-control/",
+      "quote": "said Arthur Mensch, Co-Founder and Chief Executive Officer, Mistral.",
+      "freshness": "date unknown",
+      "attempts": [
+        {
+          "query": "Arthur Mensch Mistral AI CEO 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://finance.yahoo.com/technology/ai/articles/mistral-ceo-says-ai-model-082826309.html",
+            "quote": "French AI company Mistral's newest model outperforms Chinese models on cybersecurity, CEO Arthur Mensch told a conference in Abu Dhabi on Tuesday",
+            "reason": "A Reuters report dated 2026-10-06 explicitly identifies Arthur Mensch as the CEO of Mistral AI."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "speculative wording: 'would'"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI press release Arthur Mensch co-founder chief executive",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://news.microsoft.com/source/2026/07/21/microsoft-and-mistral-expand-strategic-partnership-to-give-enterprises-and-regulated-industries-frontier-ai-they-can-control/",
+            "quote": "said Arthur Mensch, Co-Founder and Chief Executive Officer, Mistral.",
+            "reason": "A July 2026 Microsoft press release identifies Arthur Mensch as Co-Founder and CEO of Mistral, and other results agree."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "9",
+      "text": "Mistral AI raised a seed round of roughly 105M euro in mid-2023.",
+      "entity": "Mistral AI",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "quote covers 33% of the claim's key words, need 50%"
+        ]
+      ],
+      "source_url": "https://fortune.com/2023/06/14/mistral-ai-startup-record-113-million-seed-round-arthur-mensch/",
+      "quote": "For one European company, the A.I. hype helped its founders raise a record 105 million euros ($113.5 million) in its seed round this week—just one month after the company was launched.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Mistral AI funding rounds history valuation 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://aibusinessweekly.net/p/mistral-ai-statistics",
+            "quote": "| June 14, 2023 | Seed | €105 million | €240 million | Lightspeed Venture Partners |",
+            "reason": "The result states Mistral AI raised a €105 million seed round on June 14, 2023, matching the claim's amount and mid-2023 timing."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 17% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI announces seed round 105 million euros",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://fortune.com/2023/06/14/mistral-ai-startup-record-113-million-seed-round-arthur-mensch/",
+            "quote": "For one European company, the A.I. hype helped its founders raise a record 105 million euros ($113.5 million) in its seed round this week—just one month after the company was launched.",
+            "reason": "Fortune's article dated 2023-06-14 states Mistral raised 105 million euros in its seed round in June 2023."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 33% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "10",
+      "text": "Mistral AI raised a Series A of around 385M euro in late 2023.",
+      "entity": "Mistral AI",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "",
+      "quote": "",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Mistral AI funding rounds history valuation 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://aibusinessweekly.net/p/mistral-ai-statistics",
+            "quote": "| December 10, 2023 | Series A | €385 million (about $415 million) | About $2 billion | Andreessen Horowitz, Lightspeed Venture Partners |",
+            "reason": "The result states Mistral AI's Series A was €385 million in December 2023, matching the claim's amount and timing."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 17% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI announces Series B funding press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "No result states a ~385M euro Series A in late 2023; results only cover the $113M seed, the Series B, and later rounds, and one mentions a16z leading a Series A without giving the amount."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "text": "Mistral AI's Series A valued the company near 2B dollars.",
+      "entity": "Mistral AI",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "quote covers 40% of the claim's key words, need 50%"
+        ]
+      ],
+      "source_url": "https://techcrunch.com/2023/12/11/mistral-ai-a-paris-based-openai-rival-closed-its-415-million-funding-round/",
+      "quote": "French startup Mistral AI has officially closed its much anticipated Series A funding round. The company has raised €385 million, or $415 million at today’s exchange rate — according to Bloomberg, it values the company at roughly $2 billion.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Mistral AI funding round valuation 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/mistral-ai-funding",
+            "quote": "Dec 2023 | €385 million Series A | About $2 billion (reported)",
+            "reason": "The result states the December 2023 Series A valued Mistral at about $2 billion, matching the claim, though it labels the figure as reported rather than confirmed."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 20% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI Series A announcement press release valuation",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://techcrunch.com/2023/12/11/mistral-ai-a-paris-based-openai-rival-closed-its-415-million-funding-round/",
+            "quote": "French startup Mistral AI has officially closed its much anticipated Series A funding round. The company has raised €385 million, or $415 million at today’s exchange rate — according to Bloomberg, it values the company at roughly $2 billion.",
+            "reason": "TechCrunch states the Series A valued Mistral AI at roughly $2 billion, matching the claim of near 2B dollars."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 40% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "text": "A 2024 funding round reportedly valued Mistral AI at about 6B dollars.",
+      "entity": "Mistral AI",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "quote covers 33% of the claim's key words, need 50%"
+        ]
+      ],
+      "source_url": "https://itdoeswhatnow.com/m/2024-06-11-mistral-ai-closes-600m-series-b/",
+      "quote": "closed a €600 million (roughly $640 million) Series B round led by General Catalyst. TechCrunch reported the round ... and valued the company at around $6 billion",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Mistral AI valuation funding round 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.aimiracle.ai/ai-news/mistral-ai-funding-round/",
+            "quote": "Series B, June 2024 | 600M euros | $6B | General Catalyst",
+            "reason": "A result lists the June 2024 Series B at a $6B valuation, matching the claim's figure and year; another reports it as €5.8 billion, which is consistent with about $6B."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 0% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mistral AI Series B 2024 round valuation announcement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://itdoeswhatnow.com/m/2024-06-11-mistral-ai-closes-600m-series-b/",
+            "quote": "closed a €600 million (roughly $640 million) Series B round led by General Catalyst. TechCrunch reported the round ... and valued the company at around $6 billion",
+            "reason": "The result states the 2024 Series B was reportedly valued at around $6 billion, matching the claim."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 33% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "text": "Mistral 7B is an open-weight model released by Mistral AI.",
+      "entity": "Mistral 7B",
+      "kind": "entity",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://serenitiesai.com/benchmark/models/mistral-7b",
+      "quote": "Mistral 7B was created by Mistral. It is classified as a open source model in our catalogue. ... Yes, Mistral 7B is an open-source model. The model weights are publicly available for download and self-hosting.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Mistral 7B open-weight model Mistral AI release 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://serenitiesai.com/benchmark/models/mistral-7b",
+            "quote": "Mistral 7B was created by Mistral. It is classified as a open source model in our catalogue. ... Yes, Mistral 7B is an open-source model. The model weights are publicly available for download and self-hosting.",
+            "reason": "The result states Mistral 7B was created by Mistral and that its weights are publicly available, matching the claim."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,603 @@
+{
+  "run_id": "05f5b756",
+  "briefing": "DATABRICKS PRE-CALL BRIEFING\n\nNote: This is from my own knowledge, which has a cutoff date. Figures below may be out of date, so verify the latest numbers before quoting them on the call.\n\nOVERVIEW\nDatabricks is a data and AI platform company headquartered in San Francisco, founded in 2013 by the creators of Apache Spark out of UC Berkeley. It popularized the \"lakehouse\" architecture, which combines data lake storage with data warehouse performance and governance. Customers include a large share of the Fortune 500 across financial services, retail, healthcare, and tech. The company is still private and has been widely expected to IPO, though timing has stayed open.\n\nLEADERSHIP\nAli Ghodsi is co-founder and CEO. Other co-founders include Matei Zaharia (Spark creator, CTO), Reynold Xin, Ion Stoica, Patrick Wendell, and Andy Konwinski. Several co-founders remain active in product and research roles. Ghodsi is known for a customer-focused, open-source-friendly pitch.\n\nFUNDING AND FINANCIALS\nDatabricks has raised well over $10 billion in total. A 2021 Series H valued it at $38 billion, and later rounds pushed the valuation above $60 billion, then reportedly past $100 billion in 2025. The company has reported annualized revenue run rate in the $3 billion-plus range, with growth above 50% year over year, and has said it is free cash flow positive. Treat these as approximate and check current reporting.\n\nPRODUCTS\nCore offerings include the Databricks Data Intelligence Platform, Delta Lake (open table format), Unity Catalog (governance), Databricks SQL (warehousing), and Mosaic AI for building and deploying models and agents. Lakeflow handles data ingestion and pipelines. Key themes are open formats, unified governance, and generative AI on enterprise data. Main competitors are Snowflake, Google BigQuery, AWS, and Microsoft Fabric.\n\nRECENT NEWS\nThe company acquired MosaicML (about $1.3 billion, 2023) and Tabular (2024, Apache Iceberg creators), and has made later AI-focused acquisitions. It launched DBRX, an open LLM, in 2024. Confirm any developments from the past several months before the call.",
+  "ts": "2026-11-14T22:45:50",
+  "company": "Databricks",
+  "briefing_drafted_by_model": true,
+  "claims_extracted": 20,
+  "claims_checked": 8,
+  "counts": {
+    "supported": 3,
+    "contradicted": 0,
+    "forward_looking": 0,
+    "unverified": 5
+  },
+  "calls": {
+    "draft": 1,
+    "extract": 1,
+    "plan": 13,
+    "search": 13,
+    "judge": 13
+  },
+  "stopped_early": "",
+  "claims": [
+    {
+      "id": "2",
+      "text": "Databricks was founded in 2013.",
+      "entity": "Databricks",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.whobrands.com/brands/databricks",
+      "quote": "Databricks is the product brand of Databricks, Inc., the San Francisco data and AI company founded in 2013 by the creators of Apache Spark.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Databricks founding year company history 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.whobrands.com/brands/databricks",
+            "quote": "Databricks is the product brand of Databricks, Inc., the San Francisco data and AI company founded in 2013 by the creators of Apache Spark.",
+            "reason": "Multiple results state Databricks was founded in 2013."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "text": "Databricks has raised well over $10 billion in total.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+        ]
+      ],
+      "source_url": "https://www.techtarget.com/data-technologies/news/366617434/Databricks-record-10-billion-funding-round-to-fuel-growth",
+      "quote": "Before this latest round, Databricks had raised $4 billion in total funding.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Databricks total funding raised 2026 valuation",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/databricks-funding",
+            "quote": "Databricks has raised about $25 billion in equity across 13 rounds, plus roughly $7 billion in credit lines.",
+            "reason": "The result states Databricks has raised about $25 billion in equity (about $32 billion total), which is well over $10 billion."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Databricks announces funding round press release total raised",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.techtarget.com/data-technologies/news/366617434/Databricks-record-10-billion-funding-round-to-fuel-growth",
+            "quote": "Before this latest round, Databricks had raised $4 billion in total funding.",
+            "reason": "Roughly $4B before the $10B Series J, plus the $5B round in August 2026, implies well over $10B in total (about $19B); this is an inference from the figures, not a stated total."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "text": "A 2021 Series H round valued Databricks at $38 billion.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 2021.0)]"
+        ]
+      ],
+      "source_url": "https://www.prnewswire.com:443/news-releases/databricks-raises-1-6-billion-series-h-investment-at-38-billion-valuation-301365773.html",
+      "quote": "The Series H funding, led by Counterpoint Global (Morgan Stanley), puts Databricks at a $38 billion post-money valuation.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Databricks funding valuation round 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/databricks-funding",
+            "quote": "| Aug 2021 | Series H | $38 billion | 1.4x |",
+            "reason": "The valuation history table states the Series H in August 2021 valued Databricks at $38 billion."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 25% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Databricks Series H 2021 $38 billion valuation announcement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.prnewswire.com:443/news-releases/databricks-raises-1-6-billion-series-h-investment-at-38-billion-valuation-301365773.html",
+            "quote": "The Series H funding, led by Counterpoint Global (Morgan Stanley), puts Databricks at a $38 billion post-money valuation.",
+            "reason": "The August 31, 2021 Databricks press release states the Series H valued the company at $38 billion."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2021.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "text": "Databricks reportedly surpassed a $100 billion valuation in 2025.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R0",
+          "proposal was unverified"
+        ]
+      ],
+      "source_url": "",
+      "quote": "",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Databricks valuation funding round 2025 billion",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/databricks-funding",
+            "quote": "Sep 2025 | Series K | More than $100 billion | 1.6x",
+            "reason": "The valuation history table lists the September 2025 Series K at more than $100 billion, matching the claim; a second result also says a Series K was raised above a $100 billion valuation in September 2025."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 0% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Databricks announces funding round valuation press release",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "The results give valuations of $62B (Dec 2024/Jan 2025), $134B (Feb 2026) and $188B-$190B (mid-2026), but none states a valuation above $100 billion during 2025."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "16",
+      "text": "Databricks has reported an annualized revenue run rate in the $3 billion-plus range.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "quote covers 43% of the claim's key words, need 50%"
+        ]
+      ],
+      "source_url": "https://www.prnewswire.com/news-releases/databricks-grows-65-yoy-surpasses-5-4-billion-revenue-run-rate-doubles-down-on-lakebase-and-genie-302682674.html",
+      "quote": "Databricks, the Data and AI company, today announced it crossed a $5.4 billion revenue run-rate, delivering >65% year-over-year growth during its Q4.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Databricks annualized revenue run rate 2026 earnings announcement",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "Results report run rates of $4.8B, $5.4B and over $7B, but none states a run rate in the $3 billion range, so the claim neither matches nor is directly contradicted."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        },
+        {
+          "query": "Databricks press release revenue run rate surpasses billion",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.prnewswire.com/news-releases/databricks-grows-65-yoy-surpasses-5-4-billion-revenue-run-rate-doubles-down-on-lakebase-and-genie-302682674.html",
+            "quote": "Databricks, the Data and AI company, today announced it crossed a $5.4 billion revenue run-rate, delivering >65% year-over-year growth during its Q4.",
+            "reason": "Databricks reported a $5.4 billion run-rate in Feb 2026, which is above $3 billion, so the claim of a $3 billion-plus run rate holds."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 43% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "17",
+      "text": "Databricks has reported revenue growth above 50% year over year.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('pct', 50.0)]"
+        ]
+      ],
+      "source_url": "https://finance.yahoo.com/news/databricks-grows-65-yoy-surpasses-153000878.html",
+      "quote": "Databricks, the Data and AI company, today announced it crossed a $5.4 billion revenue run-rate, delivering >65% year-over-year growth during its Q4.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Databricks annual revenue growth year over year 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://datadriven.io/blog/snowflake-up-37-databricks-up-80-data-engineer-skills",
+            "quote": "On August 13, 2026, Databricks said it passed a $7B revenue run-rate growing more than 80% year over year, and raised $5B at a $190B valuation.",
+            "reason": "Databricks itself reported growth above 80% YoY, which exceeds the claimed 50% threshold."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "quote covers 40% of the claim's key words, need 50%"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Databricks press release revenue run-rate growth announcement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://finance.yahoo.com/news/databricks-grows-65-yoy-surpasses-153000878.html",
+            "quote": "Databricks, the Data and AI company, today announced it crossed a $5.4 billion revenue run-rate, delivering >65% year-over-year growth during its Q4.",
+            "reason": "Databricks itself announced year-over-year growth above 65%, which exceeds the 50% threshold in the claim."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('pct', 50.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "19",
+      "text": "Databricks acquired MosaicML for about $1.3 billion in 2023.",
+      "entity": "Databricks",
+      "kind": "number",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.revenuememo.com/p/databricks-funding",
+      "quote": "Databricks paid about $1.3 billion for MosaicML in 2023, including retention packages",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Databricks MosaicML acquisition price 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.revenuememo.com/p/databricks-funding",
+            "quote": "Databricks paid about $1.3 billion for MosaicML in 2023, including retention packages",
+            "reason": "The result states the claim's figure (about $1.3 billion), the target (MosaicML) and the year (2023) as fact."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "20",
+      "text": "Databricks acquired Tabular in 2024.",
+      "entity": "Databricks",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://economictimes.indiatimes.com/world/business/how-databricks-2-2-billion-tabular-deal-helped-tim-chens-essence-vc-nearly-return-its-entire-fund/articleshow/135240937.cms?from=mdr",
+      "quote": "His investment in Tabular, acquired by Databricks in 2024, helped put Essence VC on the map.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Databricks Tabular acquisition 2026 announcement details",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://economictimes.indiatimes.com/world/business/how-databricks-2-2-billion-tabular-deal-helped-tim-chens-essence-vc-nearly-return-its-entire-fund/articleshow/135240937.cms?from=mdr",
+            "quote": "His investment in Tabular, acquired by Databricks in 2024, helped put Essence VC on the map.",
+            "reason": "The result states as fact that Tabular was acquired by Databricks in 2024, consistent with other results."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    }
+  ]
+}
