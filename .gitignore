@@ -1,0 +1,9 @@
+# secrets and local state
+.env
+.env.*
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+cache/
+audit.jsonl
