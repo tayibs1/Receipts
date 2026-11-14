@@ -262,7 +262,8 @@ def check_claim(claim: Claim, ctx: Ctx, kind: str = "other", section: str = "") 
         parts.append(f"[freshness check: {res.freshness}]")
     res.trace = " ".join(parts)
     ctx.emit({"type": "decision", "claim_id": claim.id, "verdict": dec.verdict, "trace": res.trace,
-              "card": claim_card(res)})
+              "card": claim_card(res), "calls": sum(ctx.meter.by_kind.values()),
+              "max_calls": ctx.meter.budget.max_calls})
     return res
 
 

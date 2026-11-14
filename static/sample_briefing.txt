@@ -1,0 +1,13 @@
+ANTHROPIC: PRE-CALL BRIEFING
+
+OVERVIEW
+Anthropic is an AI safety and research company headquartered in San Francisco. It was founded in 2021 by former OpenAI researchers.
+
+LEADERSHIP
+Dario Amodei is the CEO and co-founder of Anthropic. Daniela Amodei is the President and co-founder. Mike Krieger joined Anthropic as Chief Product Officer in 2024.
+
+FUNDING AND FINANCIALS
+Amazon has invested $8 billion in Anthropic in total. Anthropic's most recent funding round was a Series E in March 2025, which raised $3.5 billion at a $61.5 billion valuation. Anthropic's annualized revenue run rate is about $1 billion.
+
+PRODUCTS
+Claude 3.5 Sonnet is Anthropic's most capable model.

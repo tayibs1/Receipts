@@ -27,6 +27,7 @@ class Paragraph:
     text: str
     claim_ids: list[str]
     check: str = "ok"  # the R9 result for this paragraph
+    notes: list[int] = field(default_factory=list)  # footnote numbers, set when assembled
 
 
 @dataclass
@@ -122,6 +123,7 @@ def _assemble(rw: Rewrite, company: str, results, by_id) -> None:
             current = p.section
             lines += ["", f"## {current or 'Briefing'}"]
         lines += ["", p.text.strip() + marks(p.claim_ids)]
+        p.notes = [note(i) for i in dict.fromkeys(p.claim_ids)]
     if rw.fallback:
         lines += ["", "## Verified facts (checked, not rewritten)"]
         for i in rw.fallback:
