@@ -3,7 +3,7 @@
 "use strict";
 
 const $ = (id) => document.getElementById(id);
-const ICON = { supported: "✓", contradicted: "✕", unverified: "?", forward_looking: "◷" };
+const ICON = { supported: "âœ“", contradicted: "âœ•", unverified: "?", forward_looking: "â—·" };
 const LABEL = {
   supported: "Supported", contradicted: "Contradicted",
   unverified: "Needs your check", forward_looking: "Plan, not a fact",
@@ -24,6 +24,11 @@ function h(tag, attrs, ...kids) {
     e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
   }
   return e;
+}
+
+/* Search results are untrusted: only http(s) links are ever made clickable. */
+function safeHref(u) {
+  return /^https?:\/\//i.test(u || "") ? u : "#";
 }
 
 function showBanner(text, info) {
@@ -77,8 +82,8 @@ function card(c, opts) {
   if (c.verdict === "contradicted") el.append(h("div", { class: "meta" }, "A source says otherwise:"));
   if (c.verdict !== "unverified" && c.source_url) {
     el.append(h("div", { class: "meta" },
-      h("a", { href: c.source_url, target: "_blank", rel: "noopener noreferrer" }, c.source_name || c.source_url),
-      " · freshness check: " + (c.freshness || "date unknown")));
+      h("a", { href: safeHref(c.source_url), target: "_blank", rel: "noopener noreferrer" }, c.source_name || c.source_url),
+      " Â· freshness check: " + (c.freshness || "date unknown")));
     el.append(h("blockquote", {}, highlighted(c.quote, c.text)));
   } else {
     const last = c.rules.length ? c.rules[c.rules.length - 1] : null;
@@ -109,9 +114,9 @@ function openDrawer(c) {
     statusBadge(c.verdict),
     h("p", { class: "claim-text" }, c.text),
     c.source_url ? h("p", { class: "meta" },
-      h("a", { href: c.source_url, target: "_blank", rel: "noopener noreferrer" }, c.source_name || c.source_url),
-      c.published_at ? ` · published ${c.published_at.slice(0, 10)}` : " · date unknown",
-      ` · freshness check: ${c.freshness || "n/a"}`) : null,
+      h("a", { href: safeHref(c.source_url), target: "_blank", rel: "noopener noreferrer" }, c.source_name || c.source_url),
+      c.published_at ? ` Â· published ${c.published_at.slice(0, 10)}` : " Â· date unknown",
+      ` Â· freshness check: ${c.freshness || "n/a"}`) : null,
     c.quote ? h("blockquote", {}, highlighted(c.quote, c.text)) : null,
     c.reason ? h("p", { class: "meta" }, "Judge's reason: " + c.reason) : null,
     h("h2", {}, "Rules the referee applied"),
@@ -122,9 +127,9 @@ function openDrawer(c) {
     c.downgraded_from ? h("p", { class: "meta" }, `The judge proposed "${c.downgraded_from}"; the referee lowered it.`) : null,
     h("h2", { style: "margin-top:24px" }, "Searches"),
     h("ul", { class: "rules" }, c.attempts.map((a) =>
-      h("li", {}, `"${a.query}"${a.from_date ? " from " + a.from_date : " (no date filter)"} · ` +
-        `${a.error ? "failed: " + a.error : a.n_results + " results, " + (a.cached ? "cached" : "live")} · ` +
-        `judge: ${a.judge || "n/a"} · referee: ${a.referee}`))),
+      h("li", {}, `"${a.query}"${a.from_date ? " from " + a.from_date : " (no date filter)"} Â· ` +
+        `${a.error ? "failed: " + a.error : a.n_results + " results, " + (a.cached ? "cached" : "live")} Â· ` +
+        `judge: ${a.judge || "n/a"} Â· referee: ${a.referee}`))),
   ].filter(Boolean));
   $("drawer").hidden = false;
   $("drawer-close").focus();
@@ -154,7 +159,7 @@ function onEvent(ev) {
     $("memory-text").textContent = ev.briefing;
     $("progress").textContent = `${total} of ${ev.extracted} claims to check, ranked by impact`;
     for (const c of ev.claims) {
-      const icon = h("span", {}, "…");
+      const icon = h("span", {}, "â€¦");
       const li = h("li", {}, icon, h("span", {}, c.text));
       chipEls.set(c.id, icon);
       $("claim-chips").append(li);
@@ -277,7 +282,7 @@ function renderRewrite(rw, cards) {
     v.append(h("h3", {}, "Sources"));
     v.append(h("ol", { class: "sources" }, rw.footnotes.map((f) =>
       h("li", { id: "fn" + f.n, value: f.n },
-        h("a", { href: f.url, target: "_blank", rel: "noopener noreferrer" }, f.source), ` (freshness check: ${f.freshness || "n/a"}) "${f.quote}"`))));
+        h("a", { href: safeHref(f.url), target: "_blank", rel: "noopener noreferrer" }, f.source), ` (freshness check: ${f.freshness || "n/a"}) "${f.quote}"`))));
   }
   v.append(h("p", { class: "muted" }, "The number check covers numbers and dates. It does not prove that the wording adds nothing else."));
   const df = $("diff");
