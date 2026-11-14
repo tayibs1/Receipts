@@ -1,0 +1,595 @@
+{
+  "run_id": "fix1-6106b42c",
+  "briefing": "OPENAI PRE-CALL BRIEFING\n\nNote: This is written from my own knowledge, which has a cutoff date. Figures and leadership details may be out of date, so verify anything critical before quoting it on the call.\n\nOVERVIEW\nOpenAI is an AI research and deployment company founded in December 2015 and headquartered in San Francisco. It began as a nonprofit and later added a capped-profit arm in 2019. It has since been working to restructure its for-profit entity, a process that drew public scrutiny and legal challenges. Its stated mission is to ensure artificial general intelligence benefits humanity. The company reached mainstream prominence with ChatGPT's launch in November 2022. Headcount has grown into the thousands.\n\nLEADERSHIP\nSam Altman is CEO and a co-founder. Greg Brockman, also a co-founder, serves as president. Altman was briefly ousted by the board in November 2023 and reinstated within days. Several senior figures have departed since, including co-founder Ilya Sutskever (2024) and former CTO Mira Murati (2024). Leadership roles may have shifted since my knowledge ends, so check the current org chart.\n\nFUNDING AND FINANCIALS\nMicrosoft has been the largest strategic backer, committing roughly 13 billion dollars in total. A 2024 round raised about 6.6 billion dollars at a valuation near 157 billion dollars, with later reports of valuations well above that. Revenue was reported at around 3.7 billion dollars for 2024, with projections to grow substantially, though the company has also reported heavy losses driven by compute costs. Treat all numbers as approximate.\n\nPRODUCTS\nChatGPT is the flagship, offered in free, Plus, Pro, Team, and Enterprise tiers. The API provides access to models such as the GPT-4 family and reasoning models in the o-series. Other offerings include DALL-E for images, Sora for video, Whisper for speech, and Codex-style coding tools. Enterprise customers care most about security, data privacy, and admin controls.\n\nRECENT NEWS\nThemes include the push to convert to a standard for-profit structure, intense competition from Anthropic, Google, and Meta, large infrastructure commitments such as the Stargate data center initiative, and ongoing copyright litigation, including the New York Times suit. Confirm the latest developments before the call.",
+  "ts": "2026-11-14T23:07:29",
+  "company": "OpenAI",
+  "briefing_drafted_by_model": true,
+  "claims_extracted": 20,
+  "claims_checked": 8,
+  "counts": {
+    "supported": 4,
+    "contradicted": 0,
+    "forward_looking": 0,
+    "unverified": 4
+  },
+  "calls": {
+    "plan": 12,
+    "search": 12,
+    "judge": 12
+  },
+  "stopped_early": "",
+  "claims": [
+    {
+      "id": "2",
+      "text": "OpenAI was founded in December 2015.",
+      "entity": "OpenAI",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.datastudios.org/post/openai-when-and-why-it-was-founded-origins-mission-and-early-vision",
+      "quote": "OpenAI was officially founded on December 11, 2015, as a research organization dedicated to developing artificial general intelligence (AGI) that benefits all of humanity.",
+      "freshness": "date unknown",
+      "attempts": [
+        {
+          "query": "OpenAI founding date history nonprofit established 2015",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.datastudios.org/post/openai-when-and-why-it-was-founded-origins-mission-and-early-vision",
+            "quote": "OpenAI was officially founded on December 11, 2015, as a research organization dedicated to developing artificial general intelligence (AGI) that benefits all of humanity.",
+            "reason": "Multiple results state OpenAI was founded in December 2015 (Dec 8 incorporation, Dec 11 announcement)."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "text": "OpenAI added a capped-profit arm in 2019.",
+      "entity": "OpenAI",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://untaylored.com/post/who-owns-openai",
+      "quote": "In March 2019, OpenAI created OpenAI LP, a \"capped-profit\" limited partnership subsidiary.",
+      "freshness": "older source, may be stale",
+      "attempts": [
+        {
+          "query": "OpenAI LP capped-profit structure history 2019 restructuring",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://untaylored.com/post/who-owns-openai",
+            "quote": "In March 2019, OpenAI created OpenAI LP, a \"capped-profit\" limited partnership subsidiary.",
+            "reason": "The result states directly that OpenAI created a capped-profit subsidiary (OpenAI LP) in 2019, matching the claim."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "text": "ChatGPT launched in November 2022.",
+      "entity": "ChatGPT",
+      "kind": "date",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://chatai.guide/concepts/when-was-chatgpt-released/",
+      "quote": "ChatGPT was released on November 30, 2022.",
+      "freshness": "date unknown",
+      "attempts": [
+        {
+          "query": "ChatGPT launch date OpenAI announcement history",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://chatai.guide/concepts/when-was-chatgpt-released/",
+            "quote": "ChatGPT was released on November 30, 2022.",
+            "reason": "The result states the launch date as November 30, 2022, which matches the claim of a November 2022 launch."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "11",
+      "text": "The OpenAI board ousted Sam Altman in November 2023.",
+      "entity": "OpenAI",
+      "kind": "date",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote not found in the source, or too short"
+        ]
+      ],
+      "source_url": "https://www.cbsnews.com/news/openai-sam-altman-ousted-board-no-confidence-mira-murati/",
+      "quote": "Sam Altman... has been pushed out as CEO at OpenAI, with the company abruptly announcing on Friday that its board \"no longer has confidence\" in his leadership.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "OpenAI board removes Sam Altman CEO November 2023",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.dexerto.com/tech/openai-removes-sam-altman-as-ceo-the-board-no-longer-has-confidence-2389910/",
+            "quote": "On November 17, 2023, OpenAI’s board of directors revealed that they no longer have the confidence in his leadership abilities and removed him from his role.",
+            "reason": "The result states directly that OpenAI's board removed Altman on November 17, 2023."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "negation or denial wording: 'no longer'"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "OpenAI announces Sam Altman leaving CEO role statement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.cbsnews.com/news/openai-sam-altman-ousted-board-no-confidence-mira-murati/",
+            "quote": "Sam Altman... has been pushed out as CEO at OpenAI, with the company abruptly announcing on Friday that its board \"no longer has confidence\" in his leadership.",
+            "reason": "CBS News, published 2023-11-17, reports the OpenAI board pushed out Altman as CEO that Friday, matching the claim of a board ouster in November 2023."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote not found in the source, or too short"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "12",
+      "text": "Ilya Sutskever departed OpenAI in 2024.",
+      "entity": "Ilya Sutskever",
+      "kind": "date",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+        ]
+      ],
+      "source_url": "https://gizmodo.com/ilya-sutskever-leaves-openai-1851477658",
+      "quote": "After almost a decade, I have made the decision to leave OpenAI,” said Sutskever [via a tweet](https://x.com/ilyasut/status/1790517455628198322) on Tuesday afternoon.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Ilya Sutskever leaves OpenAI announcement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "unverified",
+            "source_url": "",
+            "quote": "",
+            "reason": "None of the results state that Sutskever left OpenAI in 2024; they only cover his role in the November 2023 board events and unrelated topics."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R0",
+              "proposal was unverified"
+            ]
+          ],
+          "downgraded_from": ""
+        },
+        {
+          "query": "Ilya Sutskever confirms departure from OpenAI 2024 statement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://gizmodo.com/ilya-sutskever-leaves-openai-1851477658",
+            "quote": "After almost a decade, I have made the decision to leave OpenAI,” said Sutskever [via a tweet](https://x.com/ilyasut/status/1790517455628198322) on Tuesday afternoon.",
+            "reason": "The article, published 2024-05-15, reports Sutskever announced leaving OpenAI, with tweets dated May 14, 2024."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "13",
+      "text": "Mira Murati departed OpenAI in 2024.",
+      "entity": "Mira Murati",
+      "kind": "date",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+        ]
+      ],
+      "source_url": "https://uk.pcmag.com/ai/154507/openai-cto-mira-murati-resigns-in-latest-major-executive-shakeup",
+      "quote": "OpenAI Chief Technology Officer Mira Murati is leaving the company after 6.5 years.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "Mira Murati leaving OpenAI announcement 2024 details",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.theguardian.com/technology/2024/sep/25/openai-cto-mira-murati-resigns",
+            "quote": "Wed 25 Sep 2024 17.05 EDT",
+            "reason": "The Guardian, dated 25 Sep 2024, reports that Murati announced she was leaving OpenAI, which matches the claim of a 2024 departure."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote not found in the source, or too short"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "Mira Murati OpenAI chief technology officer resigns statement",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://uk.pcmag.com/ai/154507/openai-cto-mira-murati-resigns-in-latest-major-executive-shakeup",
+            "quote": "OpenAI Chief Technology Officer Mira Murati is leaving the company after 6.5 years.",
+            "reason": "The article, published 2024-09-26, reports Murati announcing her departure from OpenAI, which confirms the 2024 departure."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    },
+    {
+      "id": "14",
+      "text": "Microsoft has committed roughly 13 billion dollars to OpenAI.",
+      "entity": "Microsoft",
+      "kind": "number",
+      "verdict": "supported",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers and dates match"
+        ],
+        [
+          "R7",
+          "no hedge or negation"
+        ]
+      ],
+      "source_url": "https://www.geekwire.com/2026/bigger-than-bing-or-xbox-microsofts-openai-haul-reaches-10b-in-quarterly-revenue/",
+      "quote": "Microsoft first invested in OpenAI in 2019, eventually committing $13 billion, and became its exclusive cloud provider.",
+      "freshness": "recent",
+      "attempts": [
+        {
+          "query": "Microsoft OpenAI total investment amount 2026",
+          "from_date": "2026-08-16",
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.geekwire.com/2026/bigger-than-bing-or-xbox-microsofts-openai-haul-reaches-10b-in-quarterly-revenue/",
+            "quote": "Microsoft first invested in OpenAI in 2019, eventually committing $13 billion, and became its exclusive cloud provider.",
+            "reason": "GeekWire states Microsoft committed $13 billion to OpenAI, matching the claim's roughly 13 billion figure."
+          },
+          "verdict": "supported",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers and dates match"
+            ],
+            [
+              "R7",
+              "no hedge or negation"
+            ]
+          ],
+          "downgraded_from": ""
+        }
+      ]
+    },
+    {
+      "id": "15",
+      "text": "OpenAI raised about 6.6 billion dollars in a 2024 funding round.",
+      "entity": "OpenAI",
+      "kind": "number",
+      "verdict": "unverified",
+      "rules": [
+        [
+          "R1",
+          "quote found in source"
+        ],
+        [
+          "R8",
+          "relevance ok"
+        ],
+        [
+          "R2",
+          "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+        ]
+      ],
+      "source_url": "https://siliconangle.com/2024/10/02/openai-closes-record-6-6b-funding-round-157b-valuation/",
+      "quote": "OpenAI today announced that it has raised $6.6 billion from investors to support its artificial intelligence research. The raise, the largest venture capital funding round on record, values the ChatGPT developer at $157 billion.",
+      "freshness": "",
+      "attempts": [
+        {
+          "query": "OpenAI 2024 funding round $6.6 billion investors valuation",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://www.spokesman.com/stories/2024/oct/02/openai-gets-66-billion-in-new-funding-valuing-comp/",
+            "quote": "OpenAI has finalized a $6.6 billion funding round from investors who valued the company at $157 billion",
+            "reason": "Multiple 2024-dated results state OpenAI finalized a $6.6 billion funding round in October 2024."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        },
+        {
+          "query": "OpenAI announces closes record funding round October 2024 news",
+          "from_date": null,
+          "depth": "standard",
+          "n_results": 5,
+          "cached": false,
+          "search_error": null,
+          "proposal": {
+            "verdict": "supported",
+            "source_url": "https://siliconangle.com/2024/10/02/openai-closes-record-6-6b-funding-round-157b-valuation/",
+            "quote": "OpenAI today announced that it has raised $6.6 billion from investors to support its artificial intelligence research. The raise, the largest venture capital funding round on record, values the ChatGPT developer at $157 billion.",
+            "reason": "A dated 2024-10-02 article states OpenAI raised $6.6 billion in a funding round, matching the claim."
+          },
+          "verdict": "unverified",
+          "rules": [
+            [
+              "R1",
+              "quote found in source"
+            ],
+            [
+              "R8",
+              "relevance ok"
+            ],
+            [
+              "R2",
+              "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+            ]
+          ],
+          "downgraded_from": "supported"
+        }
+      ]
+    }
+  ]
+}

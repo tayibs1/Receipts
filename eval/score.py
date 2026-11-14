@@ -106,15 +106,24 @@ def score(runs: list[dict], labels: dict[str, dict]) -> dict:
     }, merged
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--runs", default=str(RUNS), help="directory of run records (default: the pinned baseline)")
+    ap.add_argument("--out", default="", help="results file (default: eval/results.json + eval/claims.jsonl)")
+    args = ap.parse_args(argv)
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    runs = load_runs()
+    runs = load_runs(Path(args.runs))
     if not runs:
-        print("No runs in eval/runs/. Run eval/run.py first.")
+        print(f"No runs in {args.runs}. Run eval/run.py first.")
         return 2
     results, merged = score(runs, load_labels())
-    RESULTS.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
-    CLAIMS.write_text("\n".join(json.dumps(m, ensure_ascii=False) for m in merged) + "\n", encoding="utf-8")
+    if args.out:  # a disclosed trial: never overwrites the baseline files
+        Path(args.out).write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+    else:
+        RESULTS.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
+        CLAIMS.write_text("\n".join(json.dumps(m, ensure_ascii=False) for m in merged) + "\n", encoding="utf-8")
     print(json.dumps(results, ensure_ascii=False, indent=2))
     return 0
 

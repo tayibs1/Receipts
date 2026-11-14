@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-11-14T23:07:30",
+  "companies": [
+    "Anthropic",
+    "Databricks",
+    "Mistral AI",
+    "OpenAI"
+  ],
+  "runs": 4,
+  "claims_checked": 32,
+  "verdict_counts": {
+    "supported": 19,
+    "contradicted": 0,
+    "forward_looking": 0,
+    "unverified": 13
+  },
+  "llm_proposed_supported": {
+    "attempts": 43,
+    "kept_by_referee": 19,
+    "downgraded_by_referee": 24,
+    "downgraded_by_rule": {
+      "R8": 8,
+      "R2": 8,
+      "R1": 7,
+      "R7": 1
+    }
+  },
+  "average_calls_per_run": 35.8,
+  "hand_labels": "pending: no hand labels yet"
+}
