@@ -1,27 +1,51 @@
 # Receipts: no receipt, no claim
 
-![Receipts: no receipt, no claim](docs/demo/receipts-demo-title.png)
+[![Receipts: no receipt, no claim](docs/demo/receipts-demo-title.png)](docs/demo/receipts-demo-final.mp4)
+*(click the image to watch the 104-second demo, recorded from the running app)*
 
-Receipts checks an AI-written company briefing against the live web and keeps only the claims that can show a receipt: a source, and a quote that really appears in it. It is built for the Imperial AI Hackathon (14-15 Nov 2026), Autonomous Agents track.
+**Receipts checks an AI-written company briefing against the live web and keeps only the claims that can show a receipt: a real source, and a quote that actually appears in it.** Built for the Imperial AI Hackathon (14-15 Nov 2026), Autonomous Agents track.
 
 > AI briefings do not fail loudly; they fail confidently.
 
-## The problem
+## The problem is already public
 
-A sales rep has five minutes before a call and a briefing written by an AI model. Some of it is stale or wrong, and nothing in the text says which part. Asking the same model to check itself does not help: it grades its own homework.
+Deloitte Australia refunded part of a government contract after an AI-written report cited research that doesn't exist ([AP News](https://apnews.com/article/australia-ai-errors-deloitte-ab54858680ffc4ae6555b31c8fb987f3)). EY withdrew a study after researchers found AI hallucinations in it ([AFR](https://www.afr.com/world/north-america/ey-retracts-study-after-researchers-discover-ai-hallucinations-20260517-p5zxss)). KPMG pulled an AI report after only 5 of its 45 citations matched real sources ([The Register](https://www.theregister.com/ai-and-ml/2026/06/12/kpmgs-ai-report-turns-into-a-demo-of-ai-hallucinations/5255029)). These are press reports, not our findings — but they're the same failure every time: confident text, nothing behind it. Asking the same model to check itself doesn't help either; it grades its own homework.
 
 ## What it does
 
-1. **Input:** paste a briefing, or give a company name and the model drafts one from its own memory (no web access, on purpose).
-2. **Extract:** up to 20 atomic factual claims, ranked by impact (numbers and dates first, then people and entities). The top N (default 8 in the web app) are checked.
-3. **Research each claim** with [Linkup](https://www.linkup.so) live search: plan a query, search, ask the model to *propose* a verdict with a source URL and a verbatim quote.
-4. **Referee (plain code, `referee.py`) decides.** The model can only propose. The referee can lower a verdict to "unverified", never raise it. A claim is kept only if the source is one of the returned results, the quote really appears in it, the claim's numbers and dates appear in the quote, and the quote is not a rumour, plan or denial.
-5. **One retry** with a reworded query if the first pass finds no receipt.
-6. **Policy:** supported claims go in the final briefing with footnotes; contradicted claims are struck out with the contradicting source; claims about plans are labelled "stated as a plan, not a fact"; everything else goes to "Needs your check" with a manual-search link.
-7. **Rewrite:** the model writes the final briefing from receipted claims only; code checks every number and date in every paragraph against the cited quotes (R9) and regenerates or lists the claims plainly if a paragraph fails.
-8. **Attack mode:** type any single claim and run steps 3 to 4 on it.
+1. **Input:** paste a briefing, or give a company name and the model drafts one from memory (no web access, on purpose, so the draft can be wrong).
+2. **Extract:** up to 20 atomic factual claims, ranked by impact — numbers and dates first. The top 8 are checked per run.
+3. **Research each claim** live with [Linkup](https://www.linkup.so): plan a search query, search the web, ask the model to *propose* a source and a verbatim quote. One reworded retry if the first search finds nothing.
+4. **A referee in plain code decides — the model never does.** `referee.py` can only *lower* a verdict, never raise one. A claim is kept only if the source is one of the search's own results, the quote really appears in it, the claim's numbers and dates appear in the quote, and the quote isn't a rumour, a plan, or a denial.
+5. **Policy:** supported claims get footnotes; contradicted claims are struck through with the contradicting source; plans are labelled as plans; everything else is "Needs your check" with a manual-search link — never a guess.
+6. **Rewrite:** the model writes the final briefing from receipted claims only, and code re-checks every number and date in every paragraph against the cited quotes before it ships.
+7. **Attack mode:** type any single claim — not just from a briefing — and it runs the same search-judge-referee pipeline live, on camera, in the demo.
 
-**Honest framing:** this is a pipeline with a visible agent loop (plan, search, retry, decide, rewrite) and a code-enforced check, not an open-ended autonomous agent. It does not write or run code. "The AI proposes, code decides."
+**The one sentence that matters:** the AI proposes, code decides. This is a visible, budget-capped agent loop (plan → search → retry → judge → referee → rewrite), not an open-ended agent, and it never writes or runs code.
+
+## Why this is more than a prompt wrapper
+
+- **The safety check is code, not a prompt.** `referee.py`'s rules (R0-R9) are deterministic Python. The LLM's "reason" is shown in the UI explicitly labelled *not trusted on its own*.
+- **A real evaluation, not a demo-only showcase.** 32 claims across 4 companies, hand-labelled blind (before seeing any verdict), scored by `eval/score.py` — see [Evidence](#evidence-every-number-traces-to-a-committed-file) below. Most hackathon projects show zero measurement; this one shows its working, including where it falls short.
+- **It knows when it's lying to a cache, not the internet.** Every run shows a live/offline badge per API (from a real health-check call) and a "Live run / Partly replayed / Replayed from saved results" badge with exact counts — so a judge watching the demo can tell what's real.
+- **88 automated tests** (`pytest`, no network, no keys) plus a **real headless-browser end-to-end test** (`tests/e2e_browser.mjs`) that drives the actual running app: sample run, evidence drawer, rewrite, diff, attack mode, and a phone-width layout.
+- **Every capability claim in this README traces to a file and line** — see [Claims traced to code](#claims-traced-to-code). Nothing here is asserted without a pointer to the code that makes it true.
+- **A call budget is enforced and shown on screen**, not just mentioned: a run that would exceed it stops and says so.
+
+## Evidence (every number traces to a committed file)
+
+First real-data checkpoint, `eval/results.json`: 4 companies (OpenAI, Databricks, Anthropic, Mistral AI), 8 claims each, 32 claims.
+
+| Result | Value | Source file |
+|---|---|---|
+| Claims checked | 32 | `eval/results.json` |
+| Supported / contradicted / plans / needs your check | 13 / 0 / 0 / 19 | `eval/results.json` |
+| Times the judge proposed "supported" | 43 | `eval/results.json` |
+| Kept by the referee / lowered by the referee | 13 / 30 (R8: 18, R2: 7, R7: 4, R1: 1) | `eval/results.json` |
+
+Two later trials on the same 32 claims after referee fixes (`eval/results_fix1.json`, `eval/results_fix2.json`): supported 19 and 14. The spread comes from the models, not the rules (the SDK exposes no temperature setting) — **a single number here is noisy; the method is the point.**
+
+**Hand labels (`eval/label_sheet.csv`), scored by `eval/score.py`.** All 32 claims were labelled true/false/unknowable by hand *before* seeing any Receipts verdict, and every one came out true. That's a real limit of this label set, not a brag: with no false claims in the sample, **the false-positive rate can't be measured here** — there's no case where the referee should have caught a fabrication and did or didn't. What the labels do show: of the 32 true claims, the referee kept a receipt for 13 (41%) and sent the other 19 to "needs your check." Nothing was wrongly contradicted, because nothing was contradicted in this run. **No accuracy figure is claimed.** Measuring precision needs claims that are actually false — see [Honest limits](#honest-limits).
 
 ## How to run
 
@@ -35,13 +59,11 @@ python -m venv .venv
 #   LINKUP_API_KEY=...
 .venv\Scripts\python.exe app.py                  # web app on http://127.0.0.1:8765
 .venv\Scripts\python.exe agent.py "Databricks"   # same loop in the terminal
-.venv\Scripts\python.exe -m pytest -q            # tests (no network, no keys)
+.venv\Scripts\python.exe -m pytest -q            # 88 tests, no network, no keys
 node tests\e2e_browser.mjs                       # real headless-Edge test of the running app
 ```
 
-**Saved results and fresh runs.** Searches and validated model replies are saved on disk (`cache/`, git-ignored), so a rehearsed run replays exactly and quickly. The UI says so: the badge reads "Live run", "Partly replayed" or "Replayed from saved results", with the exact counts in its tooltip. Tick "Fresh run" (or pass `--fresh` to `agent.py`) to ask the models again; searches stay cached to save Linkup credits.
-
-The app prints "key found" or "MISSING" for each key at startup, shows a live/offline badge for each API in the header (from a real call, not a guess), and shows a live/cached badge after each run. It binds `127.0.0.1:8765` exclusively. Every Linkup search is cached on disk in `cache/`, so repeat runs cost no search credits.
+**Saved results and fresh runs.** Searches and validated model replies are saved on disk (`cache/`, git-ignored), so a rehearsed run replays exactly and quickly — the UI says so honestly, with exact counts in the badge tooltip. Tick "Fresh run" (or pass `--fresh`) to ask the models again; searches stay cached to save Linkup credits. Every Linkup search is cached, so repeat runs cost no search credits, and the app binds `127.0.0.1:8765` exclusively so a stale second copy can't silently share the port.
 
 ## APIs, models and datasets used
 
@@ -52,33 +74,21 @@ The app prints "key found" or "MISSING" for each key at startup, shows a live/of
 | Linkup search API (`linkup-sdk` 0.24.1) | live web search, `searchResults` output |
 | FastAPI 0.162.7, uvicorn 0.54.0, starlette 1.10.0, pydantic 2.14.3, anthropic 2.8.0, httpx 0.28.1, pytest 9.2.0 | app, validation, SDKs, tests (all pinned in `requirements.txt`) |
 | Figma Make | UI design exploration; evidence in `docs/figma/` |
+| ElevenLabs text-to-speech, Hyperframes (HeyGen) | narration and composition for the demo video only — not part of the app |
+| Music: "Happy Beats / Business Moves" Vol. 1 by Sascha Ende, [ende.app](https://ende.app/en) ([CC BY 4.0](https://ende.app/en/standard-license)) | demo video soundtrack only |
 | Datasets | none. Evaluation uses whatever the live web returns for each query. |
-
-## Evidence (every number is copied from a results file)
-
-First real-data checkpoint, `eval/results.json`: 4 companies (OpenAI, Databricks, Anthropic, Mistral AI), 8 claims each, 32 claims.
-
-| Result | Value | Source file |
-|---|---|---|
-| Claims checked | 32 | `eval/results.json` |
-| Supported / contradicted / plans / needs your check | 13 / 0 / 0 / 19 | `eval/results.json` |
-| Times the judge proposed "supported" | 43 | `eval/results.json` |
-| Kept by the referee / lowered by the referee | 13 / 30 (R8: 18, R2: 7, R7: 4, R1: 1) | `eval/results.json` |
-
-Two later trials on the same 32 claims after referee fixes (`eval/results_fix1.json`, `eval/results_fix2.json`): supported 19 and 14. The spread comes from the models, not from rule changes (the SDK exposes no temperature setting), so **any single number here is noisy**.
-
-**Hand labels (`eval/label_sheet.csv`, scored by `eval/score.py`).** All 32 claims were labelled by hand before seeing any Receipts result, and every one came out "true". That is a real limit of this label set, not a result to be proud of: with no false claims in the sample, **the false-positive rate cannot be measured** — we have no case where the referee should have caught a fabrication and did or didn't. What the labels do show: of the 32 true claims, the referee kept a receipt for 13 (41%) and sent the other 19 (59%) to "needs your check". No true claim was wrongly contradicted, because nothing was contradicted in this run. **No accuracy figure is claimed from this label set.** Measuring false positives needs claims that are actually false, which is what the (not yet built) adversarial benchmark is for.
 
 ## Honest limits
 
-- The referee is conservative. It drops some true claims: hedge words in the quote's clause (`reportedly`, `likely`, `will`), numbers the quote does not repeat, and quotes that do not share enough words with the claim. Measured so far only as the kept/lowered counts above.
-- A quote can still hide a hedge outside its clause. R2 does not check units beyond scale suffixes (million, billion, %).
-- "Contradicted" means a source says something different; the referee does not check that both statements refer to the same time period. A contradiction from an older source is labelled "older source, may be stale".
-- The referee does not judge how authoritative a source is. Some receipts come from low-quality sites.
-- Linkup only returns what it finds. `published_at` is missing on about half of results, so the freshness label is "recent", "older source, may be stale" or "date unknown". It is a freshness check, not date verification.
-- The rewrite check (R9) blocks invented numbers and dates. It does not prove the prose adds no non-numeric statement.
-- The audit log (`audit.jsonl`, git-ignored) is a plain log. It is not tamper-proof.
-- The "sample briefing" is written for the demo with some facts deliberately out of date. It is labelled as a sample everywhere it is shown and is not a real AI draft.
+- The referee is conservative: it drops true claims that have hedge words in the quote's clause (`reportedly`, `likely`, `will`), numbers the quote doesn't repeat, or a quote that doesn't share enough words with the claim. Measured above as the kept/lowered counts and the 41% recall.
+- Its false-positive rate — whether it would catch a fabricated claim — is not yet measured. Every hand-labelled claim here is true; a false-claim benchmark is the obvious next step, not yet built.
+- A quote can still hide a hedge outside its clause. R2 doesn't check units beyond scale suffixes (million, billion, %).
+- "Contradicted" means a source says something different; the referee doesn't check both statements cover the same time period (an older source is labelled "older source, may be stale").
+- The referee doesn't judge how authoritative a source is. Some receipts come from low-quality sites.
+- Linkup only returns what it finds. `published_at` is missing on about half of results, so freshness is "recent", "older source, may be stale" or "date unknown" — a freshness check, not date verification.
+- The rewrite check (R9) blocks invented numbers and dates; it doesn't prove the prose adds no other unverified statement.
+- The audit log (`audit.jsonl`, git-ignored) is a plain log, not tamper-proof.
+- The sample briefing is written for the demo with facts deliberately out of date, and is labelled as a sample everywhere it's shown — it is not a real AI draft.
 
 ## Claims traced to code
 
@@ -101,7 +111,6 @@ Line numbers are as of the commit that added this file.
 | One server on the port; a stale second copy cannot share it | `app.py:225` |
 | Live/offline status comes from a real API call | `health` at `app.py:87` |
 
-
 ## Layout
 
 ```
@@ -113,6 +122,10 @@ llm.py       Anthropic wrappers (Haiku 5.5, Sonnet 5.5)
 search.py    Linkup wrapper with disk cache
 static/      plain HTML, CSS and JS (no build step)
 eval/        checkpoint runs, label sheet, scoring, disclosed trials
-docs/figma/  design evidence
+docs/figma/  design evidence · docs/demo/ demo video · docs/shots/ before/after UI
 tests/       tests (no network)
 ```
+
+---
+
+Built during the Imperial AI Hackathon weekend (14-15 Nov 2026) with Claude as a coding assistant; the commit history shows when. No code from earlier projects was reused. Design explored in Figma Make — `docs/figma/FIGMA-EVIDENCE.md` says exactly what was and wasn't done.
