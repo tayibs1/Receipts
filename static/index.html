@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Receipts: no receipt, no claim</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231f4fd8'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,24 +25,25 @@
   <main>
     <section id="input" class="panel" aria-labelledby="input-h">
       <h2 id="input-h">Check an AI-written briefing</h2>
-      <p class="muted">We search the live web and keep only what has a source and a quote that really appears in it.</p>
-      <label for="company">Company name (we draft a briefing from the model's memory, then check it)</label>
-      <div class="row">
+      <p class="muted">The AI proposes; code decides. A claim is kept only with a source that was really returned and a quote that really appears in it.</p>
+      <label for="company">Company name (the model drafts a briefing from memory, with no web access, then we check it)</label>
+      <div class="row tight">
         <input id="company" type="text" maxlength="80" placeholder="e.g. Databricks" autocomplete="off">
         <span class="chips" id="chips"></span>
       </div>
       <label for="briefing">or paste an AI-written briefing</label>
-      <textarea id="briefing" rows="7" maxlength="8000" placeholder="Paste the briefing here"></textarea>
+      <textarea id="briefing" rows="6" maxlength="8000" placeholder="Paste the briefing here"></textarea>
       <div class="row">
         <button id="go" class="primary" type="button">Check it</button>
         <button id="sample" class="link" type="button">Use sample briefing</button>
-        <span id="sample-note" class="muted"></span>
+        <label class="inline" for="fresh"><input type="checkbox" id="fresh"> Fresh run (ask the models again, no saved replies)</label>
       </div>
+      <p id="sample-note" class="note" hidden></p>
     </section>
 
     <section id="empty" class="panel empty">
       <h2>Nothing checked yet</h2>
-      <p class="muted">Enter a company or paste a briefing. Claims appear here one by one with their receipts, and anything without a receipt is flagged, never guessed.</p>
+      <p class="muted">Claims appear one by one with their receipts. Anything without a receipt is flagged, never guessed.</p>
     </section>
 
     <section id="run" hidden>
@@ -49,15 +51,20 @@
         <span id="progress">Starting</span>
         <span id="meter" class="muted"></span>
       </div>
+      <div class="counts" id="counts" role="status" hidden></div>
+      <p id="sample-flag" class="note" hidden></p>
       <div class="cols">
         <div class="col" id="memory-col">
           <h2>What the AI says from memory</h2>
-          <pre id="memory-text" class="memory"></pre>
-          <ul id="claim-chips" class="claim-chips"></ul>
+          <details class="memory-box" id="memory-box">
+            <summary>Show the full text</summary>
+            <pre id="memory-text" class="memory"></pre>
+          </details>
+          <ul id="claim-chips" class="claim-chips" aria-label="Claims being checked"></ul>
         </div>
         <div class="col" id="receipts-col">
           <h2>What survives with receipts</h2>
-          <div id="live-cards"></div>
+          <div id="live-cards" class="stack"></div>
         </div>
       </div>
       <details class="panel trace" id="trace-panel" open>
@@ -67,20 +74,6 @@
     </section>
 
     <section id="result" hidden>
-      <div class="counts" id="counts" role="status"></div>
-      <p id="sample-flag" class="note" hidden></p>
-      <div id="groups"></div>
-
-      <div class="panel" id="attack">
-        <h2>Attack mode</h2>
-        <p class="muted">Type any claim to check it against the live web.</p>
-        <div class="row">
-          <input id="attack-claim" type="text" maxlength="400" placeholder="e.g. Databricks raised $10 billion in 2024">
-          <button id="attack-go" class="primary" type="button">Check</button>
-        </div>
-        <div id="attack-out"></div>
-      </div>
-
       <div class="panel" id="rewrite" hidden>
         <h2>The briefing, rewritten with receipts</h2>
         <div class="tabs" role="tablist">
@@ -94,6 +87,16 @@
           <button id="download" class="secondary" type="button">Download receipt pack</button>
           <span id="copy-note" class="muted"></span>
         </div>
+      </div>
+
+      <div class="panel" id="attack">
+        <h2>Attack mode</h2>
+        <p class="muted">Type any single claim. It goes through the same plan, search, judge and referee steps.</p>
+        <div class="row tight">
+          <input id="attack-claim" type="text" maxlength="400" placeholder="e.g. Databricks raised $10 billion in 2024">
+          <button id="attack-go" class="primary" type="button">Check</button>
+        </div>
+        <div id="attack-out"></div>
       </div>
     </section>
   </main>

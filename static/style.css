@@ -95,3 +95,27 @@ sup a { color: var(--accent); text-decoration: none; padding: 0 1px; }
 .diff .removed { text-decoration: line-through; background: var(--bad-bg); color: var(--bad-ink); }
 .diff .added { background: var(--ok-bg); color: var(--ok-ink); }
 .sample-label { font-size: var(--s); font-weight: 650; color: var(--warn-ink); }
+
+/* ---- layout after the browser review ---- */
+.row.tight { margin-top: 0; }
+label.inline { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: var(--s); color: var(--muted); }
+.stack { display: grid; gap: 16px; align-content: start; }
+.group-h { display: flex; align-items: center; gap: 8px; font-size: var(--b); margin: 8px 0 0; }
+.counts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; font-size: var(--b); margin-bottom: 16px; }
+.counts .status { font-size: var(--b); padding: 4px 12px; }
+.memory-box { margin-bottom: 16px; }
+.memory-box summary { cursor: pointer; font-size: var(--s); color: var(--accent); }
+.memory-box .memory { margin-top: 8px; }
+.chip-icon { flex: 0 0 24px; height: 24px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; background: var(--line); color: var(--ink); }
+.chip-icon.supported { background: var(--ok-bg); color: var(--ok-ink); }
+.chip-icon.contradicted { background: var(--bad-bg); color: var(--bad-ink); }
+.chip-icon.unverified { background: var(--warn-bg); color: var(--warn-ink); }
+.chip-icon.forward_looking { background: var(--plan-bg); color: var(--plan-ink); }
+.claim-chips li { align-items: center; }
+.meta.strong { color: var(--bad-ink); font-weight: 600; }
+h3 { font-size: var(--b); margin: 16px 0 8px; }
+.drawer h3 { margin-top: 24px; }
+.rules li.pass { background: var(--ok-bg); color: var(--ok-ink); }
+.drawer .note { margin-top: 16px; }
+#result { display: grid; gap: 24px; }
+#sample-note { margin-top: 16px; }

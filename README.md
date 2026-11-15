@@ -34,7 +34,10 @@ python -m venv .venv
 .venv\Scripts\python.exe app.py                  # web app on http://127.0.0.1:8765
 .venv\Scripts\python.exe agent.py "Databricks"   # same loop in the terminal
 .venv\Scripts\python.exe -m pytest -q            # tests (no network, no keys)
+node tests\e2e_browser.mjs                       # real headless-Edge test of the running app
 ```
+
+**Saved results and fresh runs.** Searches and validated model replies are saved on disk (`cache/`, git-ignored), so a rehearsed run replays exactly and quickly. The UI says so: the badge reads "Live run", "Partly replayed" or "Replayed from saved results", with the exact counts in its tooltip. Tick "Fresh run" (or pass `--fresh` to `agent.py`) to ask the models again; searches stay cached to save Linkup credits.
 
 The app prints "key found" or "MISSING" for each key at startup, shows a live/offline badge for each API in the header (from a real call, not a guess), and shows a live/cached badge after each run. It binds `127.0.0.1:8765` exclusively. Every Linkup search is cached on disk in `cache/`, so repeat runs cost no search credits.
 
