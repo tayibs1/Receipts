@@ -101,9 +101,6 @@ Line numbers are as of the commit that added this file.
 | One server on the port; a stale second copy cannot share it | `app.py:225` |
 | Live/offline status comes from a real API call | `health` at `app.py:87` |
 
-## What was built during the hackathon
-
-Everything in this repository was written during the hackathon weekend (14 Nov 2026) with Claude as a coding assistant; the commit history shows when. No code from earlier projects was reused. The design was explored in Figma Make (`docs/figma/FIGMA-EVIDENCE.md` says exactly what was and was not done).
 
 ## Layout
 
