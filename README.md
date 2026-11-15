@@ -1,5 +1,7 @@
 # Receipts: no receipt, no claim
 
+![Receipts: no receipt, no claim](docs/demo/receipts-demo-title.png)
+
 Receipts checks an AI-written company briefing against the live web and keeps only the claims that can show a receipt: a source, and a quote that really appears in it. It is built for the Imperial AI Hackathon (14-15 Nov 2026), Autonomous Agents track.
 
 > AI briefings do not fail loudly; they fail confidently.
