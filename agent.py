@@ -92,6 +92,7 @@ class Report:
     calls: dict
     stopped_early: str = ""
     rewrite: object = None  # rewrite.Rewrite, or None if not requested
+    llm_cache: dict = field(default_factory=dict)  # model replies served from cache vs live
 
     @property
     def counts(self) -> dict:
@@ -290,6 +291,7 @@ def claim_card(res: ClaimResult) -> dict:
 def attack(text: str, entity: str = "", *, today: dt.date | None = None, emit: Emit | None = None,
            max_calls: int = 12) -> ClaimResult:
     """Attack mode: check one claim typed by the user (plan, search, judge, referee, one retry)."""
+    llm.set_cache(True)
     meter = Meter(Budget(max_calls=max_calls), reserve=0)
     ctx = Ctx(meter, emit or (lambda e: None), today or dt.date.today())
     return check_claim(Claim("A1", text.strip(), entity.strip()), ctx)
@@ -321,9 +323,12 @@ def run(
     today: dt.date | None = None,
     audit_path=None,
     do_rewrite: bool = True,
+    fresh: bool = False,
 ) -> Report:
+    """fresh=True skips the model-reply cache (searches are still cached)."""
     if not company and not briefing:
         raise ValueError("give a company name or a briefing")
+    llm.set_cache(not fresh)
     emit = emit or (lambda e: None)
     today = today or dt.date.today()
     run_id = uuid.uuid4().hex[:8]
@@ -358,7 +363,16 @@ def run(
 
     def work(item: tuple[Claim, str, str]) -> ClaimResult:
         claim, kind, section = item
-        return check_claim(claim, ctx, kind, section)
+        try:
+            return check_claim(claim, ctx, kind, section)
+        except Exception as e:  # one broken claim must not sink the run; shown, never hidden
+            log.exception("claim %s failed", claim.id)
+            res = ClaimResult(claim=claim, kind=kind, section=section,
+                              decision=Decision(claim.id, UNVERIFIED, rules=[("ERR", f"{type(e).__name__}: {e}")]))
+            res.trace = f'claim {claim.id} "{_short(claim.text)}" -> error: {type(e).__name__}: {e} -> unverified'
+            emit({"type": "decision", "claim_id": claim.id, "verdict": UNVERIFIED, "trace": res.trace,
+                  "card": claim_card(res), "calls": sum(meter.by_kind.values()), "max_calls": max_calls})
+            return res
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
         results = list(pool.map(work, chosen))
@@ -372,7 +386,8 @@ def run(
         rw = rewrite_mod.build(company, briefing, results, lambda what: meter.spend(what, reserve=False), emit)
         if rw.error:
             emit({"type": "info", "msg": rw.error})
-    report = Report(run_id, company, briefing, drafted, len(items), results, dict(meter.by_kind), stopped, rw)
+    report = Report(run_id, company, briefing, drafted, len(items), results, dict(meter.by_kind), stopped, rw,
+                    llm.cache_stats())
     _write_audit(report, audit_path or AUDIT_PATH)
     return report
 
@@ -392,6 +407,7 @@ def report_record(report: Report) -> dict:
         "counts": report.counts,
         "calls": report.calls,
         "stopped_early": report.stopped_early,
+        "llm_cache": report.llm_cache,
         "rewrite": _rewrite_record(report.rewrite),
         "claims": [
             {
@@ -511,6 +527,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-claims", type=int, default=10)
     ap.add_argument("--max-calls", type=int, default=60)
     ap.add_argument("--workers", type=int, default=4)
+    ap.add_argument("--fresh", action="store_true", help="ask the models again instead of replaying cached replies")
     args = ap.parse_args(argv)
 
     for stream in (sys.stdout, sys.stderr):
@@ -538,6 +555,7 @@ def main(argv: list[str] | None = None) -> int:
         max_calls=args.max_calls,
         workers=args.workers,
         emit=_make_printer(),
+        fresh=args.fresh,
     )
     if report.drafted:
         print("\n--- DRAFT (from model memory, no web) ---\n" + report.briefing + "\n--- END DRAFT ---\n")

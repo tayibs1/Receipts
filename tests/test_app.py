@@ -37,7 +37,7 @@ def test_missing_key_is_reported_not_hidden(monkeypatch):
 
 
 def test_run_streams_events_then_done(monkeypatch):
-    def fake_run(company, briefing, *, max_claims, max_calls, emit):
+    def fake_run(company, briefing, *, max_claims, max_calls, emit, fresh=False):
         emit({"type": "info", "msg": "extracting factual claims"})
         res = agent.ClaimResult(claim=Claim("1", "Acme was founded in 2001", "Acme"),
                                 decision=Decision("1", referee.UNVERIFIED, rules=[("R0", "proposal was unverified")]))

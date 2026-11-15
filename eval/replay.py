@@ -21,6 +21,7 @@ sys.path.insert(0, str(ROOT))
 
 import agent  # noqa: E402
 import config  # noqa: E402
+import llm  # noqa: E402
 from referee import Budget, Claim  # noqa: E402
 
 
@@ -31,6 +32,7 @@ def main(tag: str) -> int:
     if not all(config.key_status().values()):
         print("Missing key: cannot run live.")
         return 2
+    llm.set_cache(False)  # a trial measures the models, not a replay of cached replies
     out_dir = ROOT / "eval" / f"runs_{tag}"
     out_dir.mkdir(exist_ok=True)
     for path in sorted((ROOT / "eval" / "runs").glob("*.json")):

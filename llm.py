@@ -8,6 +8,7 @@ logged (never swallowed).
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import re
@@ -67,6 +68,78 @@ def _text(model: str, system: str, user: str, max_tokens: int) -> str:
     return text
 
 
+# ------------------------------------------------------------ reply cache
+# A validated reply is stored on disk, keyed by (model, system, prompt, max_tokens),
+# so a rehearsed run replays exactly and the UI can say "cached" honestly. The app
+# runs one check at a time, so a module-level switch is enough. Turned off for a
+# fresh run; evaluation replays turn it off to measure model variance.
+
+LLM_CACHE_DIR = config.ROOT / "cache" / "llm"
+_cache_lock = threading.Lock()
+_cache = {"enabled": True, "hits": 0, "misses": 0}
+
+
+def set_cache(enabled: bool) -> None:
+    with _cache_lock:
+        _cache.update(enabled=enabled, hits=0, misses=0)
+
+
+def cache_stats() -> dict:
+    with _cache_lock:
+        return {"enabled": _cache["enabled"], "hits": _cache["hits"], "misses": _cache["misses"]}
+
+
+def _ckey(model: str, system: str, user: str, max_tokens: int) -> str:
+    raw = json.dumps([model, system, user, max_tokens], ensure_ascii=False)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:32]
+
+
+def _cget(key: str) -> str | None:
+    with _cache_lock:
+        if not _cache["enabled"]:
+            return None
+    path = LLM_CACHE_DIR / f"{key}.txt"
+    try:
+        text = path.read_text(encoding="utf-8") if path.exists() else None
+    except OSError as e:
+        log.warning("unreadable LLM cache %s: %s", path.name, e)
+        text = None
+    with _cache_lock:
+        _cache["hits" if text else "misses"] += 1
+    return text
+
+
+def _cput(key: str, text: str) -> None:
+    try:
+        LLM_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        tmp = LLM_CACHE_DIR / f"{key}.{threading.get_ident()}.tmp"
+        tmp.write_text(text, encoding="utf-8")
+        tmp.replace(LLM_CACHE_DIR / f"{key}.txt")
+    except OSError as e:
+        log.warning("could not write LLM cache: %s", e)
+
+
+def _text_retry(model: str, system: str, user: str, max_tokens: int, retries: int = 2) -> str:
+    """Free-text call with the reply cache and retries on transient API errors."""
+    key = _ckey(model, system, user, max_tokens)
+    hit = _cget(key)
+    if hit:
+        return hit
+    last: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            text = _text(model, system, user, max_tokens)
+            _cput(key, text)
+            return text
+        except anthropic.AuthenticationError as e:
+            raise LLMError(f"{model}: authentication failed ({e.status_code})") from e
+        except (anthropic.APIError, ValueError) as e:
+            last = e
+            log.warning("%s call failed (attempt %d): %s: %s", model, attempt + 1, type(e).__name__, str(e)[:200])
+            time.sleep(1.5 * (attempt + 1))
+    raise LLMError(f"{model}: {type(last).__name__}: {str(last)[:200]}")
+
+
 def _extract_json(raw: str) -> dict:
     raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip())
     start = raw.find("{")
@@ -80,13 +153,22 @@ def _extract_json(raw: str) -> dict:
 
 
 def _json(model: str, system: str, user: str, schema: type[BaseModel], max_tokens: int, retries: int = 2):
+    key = _ckey(model, system, user, max_tokens)
+    hit = _cget(key)
+    if hit:
+        try:
+            return schema.model_validate(_extract_json(hit))
+        except (ValueError, ValidationError) as e:  # stale entry: ignore it and ask again
+            log.warning("ignoring invalid cached reply %s: %s", key, e)
     last: Exception | None = None
     prompt = user
     for attempt in range(retries + 1):
         raw = ""
         try:
             raw = _text(model, system, prompt, max_tokens)
-            return schema.model_validate(_extract_json(raw))
+            out = schema.model_validate(_extract_json(raw))
+            _cput(key, raw)  # only validated replies are cached
+            return out
         except anthropic.AuthenticationError as e:
             raise LLMError(f"{model}: authentication failed ({e.status_code})") from e
         except anthropic.APIError as e:
@@ -153,7 +235,7 @@ def draft_briefing(company: str) -> str:
         "About 300 words, plain text with section headings, concrete figures and dates where you know them. "
         "Write only from your own knowledge."
     )
-    return _text(SONNET, system, user, 2000)
+    return _text_retry(SONNET, system, user, 2000)
 
 
 def extract_claims(briefing: str, max_claims: int = 20) -> list[ClaimOut]:

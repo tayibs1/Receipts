@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import datetime as dt
 import hashlib
+import html
 import json
 import logging
 import threading
@@ -89,6 +90,12 @@ def _write_cache(path: Path, query: str, depth: str, from_date: dt.date | None, 
         log.warning("could not write cache %s: %s: %s", path.name, type(e).__name__, e)
 
 
+def _clean(h: Hit) -> Hit:
+    """Decode HTML entities ("&amp;", "&#8211;") that some pages leave in titles and
+    text, so names read properly and quotes match what the page shows."""
+    return Hit(html.unescape(h.name), h.url, html.unescape(h.content), h.published_at)
+
+
 def search(
     query: str,
     *,
@@ -102,7 +109,7 @@ def search(
     path = _cache_path(query, depth, from_date)
     cached = _read_cache(path)
     if cached is not None:
-        return SearchOutcome(cached, cached=True)
+        return SearchOutcome([_clean(h) for h in cached], cached=True)
 
     last_error = "unknown error"
     for attempt in range(retries + 1):
@@ -125,8 +132,8 @@ def search(
                 )
                 for r in resp.results
             ]
-            _write_cache(path, query, depth, from_date, hits)
-            return SearchOutcome(hits)
+            _write_cache(path, query, depth, from_date, hits)  # raw, as Linkup returned it
+            return SearchOutcome([_clean(h) for h in hits])
         except Exception as e:  # real error is logged and returned, never swallowed
             last_error = f"{type(e).__name__}: {str(e)[:200]}"
             log.warning("linkup search failed (attempt %d): %s", attempt + 1, last_error)

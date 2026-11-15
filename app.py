@@ -44,6 +44,7 @@ class RunRequest(BaseModel):
     briefing: str = Field("", max_length=8000)
     max_claims: int = Field(8, ge=1, le=10)
     sample: bool = False  # the briefing is the labelled sample, not a real draft
+    fresh: bool = False  # ask the models again instead of replaying cached replies
 
 
 class AttackRequest(BaseModel):
@@ -189,6 +190,7 @@ def _summary(report: agent.Report, sample_flag: bool, max_calls: int) -> dict:
         "calls_total": sum(report.calls.values()),
         "max_calls": max_calls,
         "searches": {"live": live, "cached": cached},
+        "llm_cache": report.llm_cache,
         "stopped_early": report.stopped_early,
         "cards": [agent.claim_card(r) for r in report.results],
         "rewrite": None if rw is None else {
@@ -231,7 +233,8 @@ def run_endpoint(req: RunRequest):
 
     def worker() -> None:
         try:
-            report = agent.run(company, briefing, max_claims=req.max_claims, max_calls=max_calls, emit=events.put)
+            report = agent.run(company, briefing, max_claims=req.max_claims, max_calls=max_calls,
+                               emit=events.put, fresh=req.fresh)
             events.put(_summary(report, req.sample, max_calls))
         except Exception as e:
             log.exception("run failed")
@@ -261,11 +264,15 @@ def run_endpoint(req: RunRequest):
 def attack_endpoint(req: AttackRequest):
     if not all(config.key_status().values()):
         return JSONResponse({"error": "An API key is missing, so a live check cannot run."}, status_code=503)
+    if not _run_lock.acquire(blocking=False):
+        return JSONResponse({"error": "A check is already running. Wait for it to finish."}, status_code=409)
     try:
         res = agent.attack(req.claim, req.entity)
     except Exception as e:
         log.exception("attack failed")
         return JSONResponse({"error": _plain_error(e)}, status_code=500)
+    finally:
+        _run_lock.release()
     return agent.claim_card(res)
 
 
