@@ -1,6 +1,6 @@
-/* Receipts UI. Plain JS, no build step, ASCII-only source (symbols are \u escapes).
-   All text is inserted as text, never as HTML: claims, quotes and sources are
-   untrusted web content. */
+/* Receipts site. Plain JS, no build step, ASCII-only source (symbols are \u escapes).
+   Everything dynamic is inserted as text, never as HTML: claims, quotes and sources are
+   untrusted web content. No inline styles or scripts, so a strict CSP applies. */
 "use strict";
 
 const $ = (id) => document.getElementById(id);
@@ -9,12 +9,20 @@ const LABEL = {
   supported: "Supported", contradicted: "Contradicted",
   unverified: "Needs your check", forward_looking: "Plan, not a fact",
 };
-const ORDER = ["contradicted", "supported", "forward_looking", "unverified"];
-const RULE_NAME = {
-  R0: "Verdict", R1: "Source and quote", R2: "Numbers and dates", R4: "Call budget",
-  R6: "Search", R7: "Hedges and denials", R8: "Relevance", ERR: "Error",
+const ORDER = ["contradicted", "unverified", "forward_looking", "supported"];
+const PRIORITY = { contradicted: 4, unverified: 3, forward_looking: 2, supported: 1 };
+const RULE_TEXT = {
+  R0: "The judge found no source that states this",
+  R1: "The source is one of the returned results and the quote appears in it",
+  R2: "Every number and date in the claim appears in the quote",
+  R4: "Call budget reached; claim left unchecked",
+  R6: "The search failed, so the claim is not guessed",
+  R7: "No rumour, plan or denial wording around the quote",
+  R8: "The source mentions the company and the quote shares the claim's key words",
+  ERR: "A model error stopped this claim",
 };
 const DOT = " \u00b7 ";
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let lastDone = null;
 let sampleActive = false;
 
@@ -33,10 +41,9 @@ function h(tag, attrs, ...kids) {
 }
 
 /* Search results are untrusted: only http(s) links are ever made clickable. */
-function safeHref(u) {
-  return /^https?:\/\//i.test(u || "") ? u : "#";
-}
+const safeHref = (u) => (/^https?:\/\//i.test(u || "") ? u : "#");
 const ext = (href, text) => h("a", { href: safeHref(href), target: "_blank", rel: "noopener noreferrer" }, text);
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 function showBanner(text, info) {
   const b = $("banner");
@@ -45,7 +52,7 @@ function showBanner(text, info) {
   b.hidden = !text;
 }
 
-/* ---------- status badges ---------- */
+/* ---------- service status ---------- */
 async function loadHealth() {
   try {
     const s = await (await fetch("/api/health")).json();
@@ -61,7 +68,7 @@ async function loadHealth() {
   }
 }
 
-/* ---------- highlighting: the quote's words that are also in the claim ---------- */
+/* ---------- quote highlighting: words of the quote that are also in the claim ---------- */
 const keyOf = (w) => (w.toLowerCase().match(/[a-z]{4,}|\d[\d.,]*\d|\d/) || [""])[0].slice(0, 5);
 function highlighted(quote, claim) {
   const want = new Set((claim.match(/\S+/g) || []).map(keyOf).filter(Boolean));
@@ -76,30 +83,46 @@ function highlighted(quote, claim) {
 /* ---------- cards ---------- */
 const statusBadge = (v) => h("span", { class: "status " + v }, ICON[v] + " " + LABEL[v]);
 
+/* Plain-English reason on the card; the exact rule and detail are in the evidence drawer. */
+const PLAIN_WHY = {
+  R0: "No source we found states this.",
+  R1: "The AI's suggested source or quote could not be verified.",
+  R2: "A source was found, but it doesn't contain every number or date in the claim.",
+  R4: "The call budget ran out before this claim was checked.",
+  R6: "The search failed, so nothing was guessed.",
+  R7: "A source mentions this, but only as a rumour, a plan or a denial.",
+  R8: "A source was found, but it doesn't clearly say this.",
+  ERR: "A model error stopped this check.",
+};
 function why(c) {
   const last = c.rules.length ? c.rules[c.rules.length - 1] : null;
-  if (!last) return "No receipt found.";
-  const [r, detail] = last;
-  if (r === "R0" && detail === "proposal was unverified") return "No returned source states this.";
-  if (r === "R0") return detail.charAt(0).toUpperCase() + detail.slice(1) + ".";
-  const lowered = c.downgraded_from ? `The model said "${LABEL[c.downgraded_from].toLowerCase()}"; code refused it. ` : "";
-  return `${lowered}${RULE_NAME[r] || r}: ${detail}.`;
+  if (!last) return "No receipt found. It is yours to check.";
+  const base = PLAIN_WHY[last[0]] || (last[1].charAt(0).toUpperCase() + last[1].slice(1) + ".");
+  return base + " Not guessed: it is yours to check.";
 }
 
+const GROUP_NOTE = {
+  contradicted: "A source says otherwise. We do not judge how authoritative it is.",
+  unverified: "No verified source. Never guessed: yours to check.",
+  forward_looking: "An intention, not a completed fact.",
+  supported: "A real source states it and code verified the quote.",
+};
+
 function card(c) {
-  const el = h("article", { class: "card " + c.verdict });
-  el.append(statusBadge(c.verdict));
+  const el = h("article", { class: "card " + c.verdict, "data-claim": c.id });
+  el.append(h("div", { class: "card-head" }, statusBadge(c.verdict), h("span", { class: "claim-no" }, "Claim " + c.id)));
   el.append(h("div", { class: "claim-text" + (c.verdict === "contradicted" ? " struck" : "") }, c.text));
   if (c.verdict !== "unverified" && c.source_url) {
     if (c.verdict === "contradicted") el.append(h("div", { class: "meta strong" }, "A source says otherwise:"));
+    el.append(h("div", { class: "src" },
+      h("div", { class: "src-name" }, ext(c.source_url, c.source_name || c.source_url)),
+      h("span", { class: "chip-date" }, "Freshness: " + (c.freshness || "date unknown"))));
     el.append(h("blockquote", {}, highlighted(c.quote, c.text)));
-    el.append(h("div", { class: "meta" }, ext(c.source_url, c.source_name || c.source_url),
-      DOT + "freshness check: " + (c.freshness || "date unknown")));
   } else {
     el.append(h("div", { class: "meta" }, why(c)));
   }
   const actions = h("div", { class: "actions" },
-    h("button", { class: "link", type: "button", onclick: () => openDrawer(c) }, "Evidence and rules"));
+    h("button", { class: "linkbtn", type: "button", onclick: () => openDrawer(c) }, "Evidence and rules"));
   if (c.verdict === "unverified") {
     actions.append(ext(c.search_link, "Search manually"));
     const id = "chk-" + c.id + "-" + Math.random().toString(36).slice(2, 7);
@@ -112,20 +135,36 @@ function card(c) {
 /* ---------- evidence drawer ---------- */
 function openDrawer(c) {
   const failIdx = c.verdict === "unverified" ? c.rules.length - 1 : -1;
+  const WHY = {
+    supported: "A returned source states it, and code verified the quote.",
+    contradicted: "A source says something different. We do not judge how authoritative it is.",
+    forward_looking: "It is about the future, and the source says the same. We do not call it a fact.",
+  };
   $("drawer-body").replaceChildren(...[
+    h("p", { class: "eyebrow" }, "Evidence for claim " + c.id),
     statusBadge(c.verdict),
+    h("h3", { class: "d-label" }, "Claim"),
     h("p", { class: "claim-text" }, c.text),
+    c.quote ? h("h3", { class: "d-label" }, "Full quote") : null,
+    c.quote ? h("blockquote", {}, highlighted(c.quote, c.text)) : null,
+    c.source_url ? h("h3", { class: "d-label" }, "Source") : null,
     c.source_url ? h("p", { class: "meta" }, ext(c.source_url, c.source_name || c.source_url),
       c.published_at ? DOT + "published " + c.published_at.slice(0, 10) : DOT + "publication date unknown",
       DOT + "freshness check: " + (c.freshness || "n/a")) : null,
-    c.quote ? h("blockquote", {}, highlighted(c.quote, c.text)) : null,
+    h("h3", { class: "d-label" }, "Why we decided this"),
+    h("p", {}, c.verdict === "unverified" ? why(c) : WHY[c.verdict]),
     c.reason ? h("p", { class: "meta" }, "The model's reason (not trusted on its own): " + c.reason) : null,
-    h("h3", {}, "What the code checked"),
-    h("ul", { class: "rules" }, c.rules.map((r, i) =>
-      h("li", { class: i === failIdx && r[1] !== "proposal was unverified" ? "fail" : (i === failIdx ? "" : "pass") },
-        h("b", {}, (i === failIdx ? "\u2715 " : "\u2713 ") + (RULE_NAME[r[0]] || r[0]) + ` (${r[0]}) `), r[1]))),
+    h("h3", { class: "d-label" }, "Checker rules"),
+    h("ul", { class: "rules" }, c.rules.map((r, i) => {
+      const stopped = i === failIdx && r[1] !== "proposal was unverified";
+      return h("li", { class: stopped ? "fail" : "" },
+        h("span", { class: "rid" }, r[0]),
+        h("span", { class: "rmark", "aria-hidden": "true" }, stopped ? "\u2715" : "\u2713"),
+        h("div", {}, h("b", {}, RULE_TEXT[r[0]] || r[0]),
+          h("span", {}, r[1] + (stopped ? ". Stopped this claim." : ""))));
+    })),
     c.downgraded_from ? h("p", { class: "note" }, `The model proposed "${LABEL[c.downgraded_from]}". The referee lowered it: no receipt, no claim.`) : null,
-    h("h3", {}, "Searches"),
+    h("h3", { class: "d-label" }, "Searches"),
     h("ul", { class: "rules" }, c.attempts.map((a, i) =>
       h("li", {}, (i ? "Retry: " : "") + `"${a.query}"` + (a.from_date ? ` (from ${a.from_date})` : " (no date filter)") + DOT +
         (a.error ? "failed: " + a.error : `${a.n_results} results, ${a.cached ? "saved" : "live"}`) + DOT +
@@ -137,40 +176,136 @@ function openDrawer(c) {
 $("drawer-close").addEventListener("click", () => { $("drawer").hidden = true; });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape") $("drawer").hidden = true; });
 
+/* ---------- progress steps ---------- */
+const STEPS = ["read", "check", "write"];
+function setStep(name) {
+  const at = name === "done" ? STEPS.length : STEPS.indexOf(name);
+  document.querySelectorAll("#steps li").forEach((li) => {
+    const i = STEPS.indexOf(li.dataset.step);
+    li.className = i < at ? "done" : i === at ? "active" : "";
+  });
+}
+
+/* ---------- the AI's text, marked up like an editor's red pen ---------- */
+const STOP = new Set(["that", "this", "with", "from", "have", "were", "been", "they", "their", "which", "also", "into",
+  "than", "then", "about", "over", "more", "most", "company", "said", "year", "years"]);
+const tokens = (t) => new Set(((t || "").toLowerCase().match(/[a-z]{4,}|\d[\d.,]*\d|\d/g) || []).filter((w) => !STOP.has(w)));
+const decisions = new Map();   // claim id -> verdict
+const cardData = new Map();    // claim id -> card
+const claimSent = new Map();   // claim id -> sentence record
+let sentences = [];
+
+function looksLikeHeading(line) {
+  const words = line.split(/\s+/).length;
+  return !/[.!?]$/.test(line) && line.length <= 52 && words <= 7;
+}
+function titleCase(s) {
+  return /[a-z]/.test(s) ? s : s.toLowerCase().replace(/(^|\s)\S/g, (m) => m.toUpperCase());
+}
+
+function buildPaper(briefing, claims) {
+  const root = $("memory-text");
+  root.replaceChildren();
+  sentences = []; claimSent.clear();
+  const clean = (briefing || "").replace(/\r/g, "").replace(/\*\*/g, "");
+  for (const raw of clean.split("\n")) {
+    const line = raw.replace(/^[#*\-\s]+/, "").trim();
+    if (!line) continue;
+    if (looksLikeHeading(line)) { root.append(h("h4", { class: "paper-h" }, titleCase(line))); continue; }
+    const p = h("p", {});
+    for (const s of line.split(/(?<=[.!?])\s+/)) {
+      // the last word sits in a no-wrap tail, so a status icon can never wrap onto its own line
+      const m = s.match(/^([\s\S]*?)(\S+)$/);
+      const tail = h("span", { class: "tail" }, m ? m[2] : s);
+      const el = h("span", { class: "sent" }, m ? m[1] : "", tail);
+      p.append(el, " ");
+      sentences.push({ el, tail, text: s, tok: tokens(s), claims: [], icon: null });
+    }
+    root.append(p);
+  }
+  // attach each claim to the sentence it most likely came from
+  for (const c of claims) {
+    const ct = tokens(c.text);
+    if (!ct.size) continue;
+    let best = null, bestScore = 0;
+    for (const se of sentences) {
+      let n = 0;
+      for (const w of ct) if (se.tok.has(w)) n += 1;
+      const score = n / ct.size;
+      if (score > bestScore) { bestScore = score; best = se; }
+    }
+    if (best && bestScore >= 0.5) {
+      best.claims.push(c.id);
+      best.el.classList.add("s-pending");
+      claimSent.set(c.id, best);
+    }
+  }
+}
+
+function markSentence(claimId, verdict) {
+  decisions.set(claimId, verdict);
+  const se = claimSent.get(claimId);
+  if (!se) return;
+  let worst = null;
+  for (const cid of se.claims) {
+    const v = decisions.get(cid);
+    if (v && (!worst || PRIORITY[v] > PRIORITY[worst])) worst = v;
+  }
+  if (!worst) return;
+  se.el.className = "sent s-" + worst;
+  if (!se.icon) {
+    se.icon = h("span", { class: "sent-ico", "aria-hidden": "true" });
+    se.tail.append(se.icon);
+    const open = () => {
+      let pick = null;
+      for (const cid of se.claims) {
+        const v = decisions.get(cid);
+        if (v && (!pick || PRIORITY[v] > PRIORITY[decisions.get(pick)])) pick = cid;
+      }
+      if (pick && cardData.has(pick)) openDrawer(cardData.get(pick));
+    };
+    se.el.setAttribute("role", "button");
+    se.el.setAttribute("tabindex", "0");
+    se.el.addEventListener("click", open);
+    se.el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+  }
+  se.icon.textContent = ICON[worst];
+  se.el.setAttribute("aria-label", `${LABEL[worst]}: ${se.text.trim()}. Open the receipt.`);
+}
+
 /* ---------- running ---------- */
 let total = 0, seen = 0;
-const chipEls = new Map();
 
 function resetRun() {
-  total = 0; seen = 0; chipEls.clear(); lastDone = null;
-  $("empty").hidden = true; $("run").hidden = false; $("result").hidden = true;
-  $("counts").hidden = true; $("sample-flag").hidden = true;
-  $("memory-text").textContent = ""; $("memory-box").open = false;
-  $("claim-chips").replaceChildren(); $("live-cards").replaceChildren(); $("trace").replaceChildren();
+  total = 0; seen = 0; lastDone = null;
+  decisions.clear(); cardData.clear();
+  $("run").hidden = false; $("result").hidden = true;
+  $("verdict").hidden = true; $("counts").hidden = true; $("sample-flag").hidden = true;
+  $("memory-text").replaceChildren(); $("live-cards").replaceChildren(); $("trace").replaceChildren();
   $("trace-panel").open = true; $("attack-out").replaceChildren();
-  $("progress").textContent = "Starting"; $("meter").textContent = "";
+  $("progress").textContent = "Starting"; $("meter").textContent = ""; $("step-count").textContent = "";
   $("badge-mode").hidden = true; showBanner("");
+  setStep("read");
 }
 
 function onEvent(ev) {
   if (ev.type === "info") {
     $("progress").textContent = ev.msg.charAt(0).toUpperCase() + ev.msg.slice(1);
     $("trace").append(h("li", {}, ev.msg));
+    if (/rewrit/i.test(ev.msg)) setStep("write");
   } else if (ev.type === "claims") {
     total = ev.claims.length;
-    $("memory-text").textContent = ev.briefing;
+    buildPaper(ev.briefing, ev.claims);
+    setStep("check");
+    $("step-count").textContent = `(0 of ${total})`;
     $("progress").textContent = `Checking ${total} of ${ev.extracted} claims, ranked by impact`;
-    for (const c of ev.claims) {
-      const icon = h("span", { class: "chip-icon pending", "aria-label": "checking" }, "\u2026");
-      $("claim-chips").append(h("li", {}, icon, h("span", {}, c.text)));
-      chipEls.set(c.id, icon);
-    }
   } else if (ev.type === "decision") {
     seen += 1;
     $("progress").textContent = `Checked ${seen} of ${total} claims`;
+    $("step-count").textContent = `(${seen} of ${total})`;
     $("meter").textContent = `${ev.calls} of ${ev.max_calls} calls used`;
-    const icon = chipEls.get(ev.claim_id);
-    if (icon) { icon.textContent = ICON[ev.verdict]; icon.className = "chip-icon " + ev.verdict; icon.setAttribute("aria-label", LABEL[ev.verdict]); }
+    cardData.set(ev.claim_id, ev.card);
+    markSentence(ev.claim_id, ev.verdict);
     $("live-cards").append(card(ev.card));
     $("trace").append(h("li", {}, ev.trace));
   } else if (ev.type === "done") {
@@ -181,12 +316,31 @@ function onEvent(ev) {
   }
 }
 
+/* Events are shown one at a time, so each claim lands on its own: a saved replay would
+   otherwise appear all at once. Live runs are slower than this, so they are unaffected. */
+const GAP_MS = reduceMotion ? 0 : 450;
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const queue = [];
+let draining = false;
+async function drain() {
+  draining = true;
+  while (queue.length) {
+    const ev = queue.shift();
+    onEvent(ev);
+    if (ev.type === "decision" && GAP_MS) await sleep(GAP_MS);
+  }
+  draining = false;
+}
+function enqueue(ev) { queue.push(ev); if (!draining) drain(); }
+async function drained() { while (draining || queue.length) await sleep(40); }
+
 async function start() {
   const company = $("company").value.trim();
   const briefing = $("briefing").value.trim();
   if (!company && !briefing) { showBanner("Enter a company name or paste a briefing first."); return; }
   $("go").disabled = true; $("attack-go").disabled = true;
   resetRun();
+  $("run").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
   try {
     const resp = await fetch("/api/run", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -196,7 +350,7 @@ async function start() {
     if (!resp.ok) {
       const j = await resp.json().catch(() => ({}));
       showBanner(j.error || `The server answered ${resp.status}.`);
-      $("run").hidden = true; $("empty").hidden = false;
+      $("run").hidden = true;
       return;
     }
     const reader = resp.body.getReader();
@@ -213,9 +367,10 @@ async function start() {
         if (!line) continue;
         const ev = JSON.parse(line.slice(6));
         if (ev.type === "done" || ev.type === "error") gotEnd = true;
-        onEvent(ev);
+        enqueue(ev);
       }
     }
+    await drained();
     if (!gotEnd) showBanner("The connection closed before the check finished. Nothing was guessed; run it again.");
   } catch (e) {
     showBanner("Lost the connection to the server: " + e.message);
@@ -225,15 +380,30 @@ async function start() {
 }
 
 /* ---------- result ---------- */
-function plural(n, one, many) { return `${n} ${n === 1 ? one : many}`; }
+function verdictHead(d) {
+  const c = d.counts, el = $("verdict");
+  const bits = [];
+  if (c.contradicted) bits.push(h("span", { class: "v-bad" }, `${c.contradicted} contradicted by a source`));
+  if (c.supported) bits.push(h("span", { class: "v-ok" }, `${c.supported} supported`));
+  if (c.forward_looking) bits.push(h("span", { class: "v-plan" }, plural(c.forward_looking, "plan", "plans")));
+  if (c.unverified) bits.push(h("span", { class: "v-chk" }, `${c.unverified} ${c.unverified === 1 ? "needs" : "need"} your check`));
+  el.replaceChildren();
+  if (!bits.length) { el.append("No checkable factual claims were found in this text."); }
+  else {
+    el.append(`Of ${plural(d.checked, "claim", "claims")} checked: `);
+    bits.forEach((b, i) => { if (i) el.append(i === bits.length - 1 ? " and " : ", "); el.append(b); });
+    el.append(".");
+  }
+  el.hidden = false;
+}
 
 function finish(d) {
   lastDone = d;
   const c = d.counts;
+  verdictHead(d);
   const counts = $("counts");
-  counts.replaceChildren(
-    h("span", {}, `${d.checked} of ${d.extracted} claims checked, ranked by impact:`),
-    ...ORDER.filter((v) => c[v]).map((v) => h("span", { class: "status " + v }, `${ICON[v]} ${c[v]} ${LABEL[v].toLowerCase()}`)));
+  counts.replaceChildren(h("span", {},
+    `${d.checked} of ${d.extracted} claims checked, ranked by impact (numbers and dates first).`));
   counts.hidden = false;
 
   const s = d.searches, m = d.llm_cache || { hits: 0, misses: 0 };
@@ -254,13 +424,16 @@ function finish(d) {
   for (const v of ORDER) {
     const items = d.cards.filter((x) => x.verdict === v);
     if (!items.length) continue;
-    col.append(h("h3", { class: "group-h" }, statusBadge(v), " " + items.length));
-    items.forEach((x) => col.append(card(x)));
+    col.append(h("h4", { class: "group-h" }, statusBadge(v), `${items.length} ${items.length === 1 ? "claim" : "claims"}`,
+      h("span", { class: "group-note" }, GROUP_NOTE[v])));
+    items.forEach((x) => { cardData.set(x.id, x); col.append(card(x)); });
   }
   if (!d.cards.length) col.append(h("p", { class: "muted" }, "No checkable factual claims were found in this text."));
 
+  setStep("done");
+  $("step-count").textContent = "";
   $("progress").textContent = `Done: ${plural(d.checked, "claim", "claims")} checked`;
-  $("meter").textContent = `${d.calls_total} of ${d.max_calls} calls used` + DOT + mode.title;
+  $("meter").textContent = `${d.calls_total} of ${d.max_calls} calls used` + DOT + mode.textContent.toLowerCase();
   $("trace-panel").open = false;
   $("result").hidden = false;
   renderRewrite(d.rewrite, d.cards);
@@ -323,23 +496,38 @@ function tab(which) {
 }
 
 /* ---------- wiring ---------- */
-$("go").addEventListener("click", start);
-$("company").addEventListener("keydown", (e) => { if (e.key === "Enter") start(); });
-$("tab-verified").addEventListener("click", () => tab("verified"));
-$("tab-diff").addEventListener("click", () => tab("diff"));
-function clearSample() { sampleActive = false; $("sample-note").hidden = true; }
-for (const name of ["OpenAI", "Databricks", "Anthropic", "Mistral AI"]) {
-  $("chips").append(h("button", { class: "chip", type: "button", onclick: () => {
-    $("company").value = name; $("briefing").value = ""; clearSample(); $("company").focus();
-  } }, name));
+function updateChars() {
+  const n = $("briefing").value.length;
+  $("chars").textContent = n ? `${n.toLocaleString()} of 8,000 characters` : "";
 }
-$("briefing").addEventListener("input", clearSample);
-$("sample").addEventListener("click", async () => {
+function clearSample() { sampleActive = false; $("sample-note").hidden = true; }
+
+async function loadSample() {
   try {
     const s = await (await fetch("/api/sample")).json();
     $("briefing").value = s.text; $("company").value = ""; sampleActive = true;
     $("sample-note").textContent = s.label; $("sample-note").hidden = false;
-  } catch (e) { showBanner("Could not load the sample: " + e.message); }
+    updateChars();
+    return true;
+  } catch (e) { showBanner("Could not load the sample: " + e.message); return false; }
+}
+
+$("go").addEventListener("click", start);
+$("company").addEventListener("keydown", (e) => { if (e.key === "Enter") start(); });
+$("tab-verified").addEventListener("click", () => tab("verified"));
+$("tab-diff").addEventListener("click", () => tab("diff"));
+for (const name of ["OpenAI", "Databricks", "Anthropic", "Mistral AI"]) {
+  $("chips").append(h("button", { class: "chip", type: "button", onclick: () => {
+    $("company").value = name; $("briefing").value = ""; clearSample(); updateChars(); $("company").focus();
+  } }, name));
+}
+$("briefing").addEventListener("input", () => { clearSample(); updateChars(); });
+$("sample").addEventListener("click", loadSample);
+$("hero-try").addEventListener("click", async () => {
+  if (await loadSample()) {
+    $("try").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+    $("go").focus({ preventScroll: true });
+  }
 });
 $("copy-md").addEventListener("click", async () => {
   if (!lastDone || !lastDone.rewrite) return;

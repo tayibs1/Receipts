@@ -4,107 +4,270 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Receipts: no receipt, no claim</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231f4fd8'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+  <meta name="description" content="Receipts checks what an AI wrote against the live web and keeps only the claims that can show a receipt: a real source, and the exact words that prove it.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23181c1a'/%3E%3Cpath d='M4 8.5l2.5 2.5L12 5.5' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="top">
-    <div class="brand">
-      <h1>Receipts</h1>
+  <a class="skip" href="#try">Skip to the demo</a>
+
+  <header class="nav" id="top">
+    <div class="wrap nav-in">
+      <a class="logo" href="#top" aria-label="Receipts, back to top">
+        <span class="logo-box"><svg class="logo-mark" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.5l2 2 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span>Receipts</span>
+      </a>
       <span class="tagline">No receipt, no claim.</span>
-    </div>
-    <div class="badges" aria-label="Status">
-      <span class="badge" id="badge-anthropic">Anthropic: checking</span>
-      <span class="badge" id="badge-linkup">Linkup: checking</span>
-      <span class="badge" id="badge-mode" hidden></span>
+      <nav class="links" aria-label="Sections">
+        <a href="#problem">The problem</a>
+        <a href="#how">How it works</a>
+        <a href="#try">Try it</a>
+        <a href="https://github.com/tayibs1/Receipts" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+      <div class="badges" aria-label="Service status">
+        <span class="badge" id="badge-anthropic">Anthropic: checking</span>
+        <span class="badge" id="badge-linkup">Linkup: checking</span>
+        <span class="badge" id="badge-mode" hidden></span>
+      </div>
     </div>
   </header>
 
   <div id="banner" class="banner" role="alert" hidden></div>
 
   <main>
-    <section id="input" class="panel" aria-labelledby="input-h">
-      <h2 id="input-h">Check an AI-written briefing</h2>
-      <p class="muted">The AI proposes; code decides. A claim is kept only with a source that was really returned and a quote that really appears in it.</p>
-      <label for="company">Company name (the model drafts a briefing from memory, with no web access, then we check it)</label>
-      <div class="row tight">
-        <input id="company" type="text" maxlength="80" placeholder="e.g. Databricks" autocomplete="off">
-        <span class="chips" id="chips"></span>
+    <!-- HERO -->
+    <section class="hero wrap" aria-labelledby="hero-h">
+      <div class="hero-copy">
+        <p class="eyebrow">Evidence-first company research</p>
+        <h1 id="hero-h">AI sounds sure, even when it&rsquo;s&nbsp;wrong.</h1>
+        <p class="lead">Receipts checks what an AI wrote against the live web and keeps only the claims that can show a <strong>receipt</strong>: a real source, and the exact words that prove it.</p>
+        <div class="cta">
+          <button id="hero-try" class="btn primary lg" type="button">Try the sample briefing</button>
+          <a class="btn ghost lg" href="#how">See how it works</a>
+        </div>
+        <p class="fine">The AI proposes. Plain code decides. Anything it can&rsquo;t prove is flagged, never guessed.</p>
       </div>
-      <label for="briefing">or paste an AI-written briefing</label>
-      <textarea id="briefing" rows="6" maxlength="8000" placeholder="Paste the briefing here"></textarea>
-      <div class="row">
-        <button id="go" class="primary" type="button">Check it</button>
-        <button id="sample" class="link" type="button">Use sample briefing</button>
-        <label class="inline" for="fresh"><input type="checkbox" id="fresh"> Fresh run (ask the models again, no saved replies)</label>
-      </div>
-      <p id="sample-note" class="note" hidden></p>
+
+      <figure class="receipt-wrap">
+        <div class="receipt" role="img" aria-label="Example from the demo sample: an AI briefing about Anthropic was checked. Three claims were contradicted by sources, three were supported and two need a human check.">
+          <div class="rc-head"><span>RECEIPT</span><span>demo sample</span></div>
+          <p class="rc-sub">An AI briefing on Anthropic, checked against the live web</p>
+          <ul class="rc-lines">
+            <li class="rc-line"><span class="rc-ico bad" aria-hidden="true">&#10005;</span><div><s>Amazon has invested $8 billion in Anthropic in total.</s><em>A source says about $18 billion</em></div></li>
+            <li class="rc-line"><span class="rc-ico bad" aria-hidden="true">&#10005;</span><div><s>The most recent funding round was a Series E.</s><em>A source says Series H, May 2026</em></div></li>
+            <li class="rc-line"><span class="rc-ico bad" aria-hidden="true">&#10005;</span><div><s>Annualised revenue run rate is about $1 billion.</s><em>A source says over $65 billion</em></div></li>
+          </ul>
+          <div class="rc-total">
+            <span class="t-all"><b>8</b> claims checked</span>
+            <span class="t-bad"><b>3</b> contradicted</span>
+            <span class="t-ok"><b>2</b> supported</span>
+            <span class="t-chk"><b>3</b> need you</span>
+          </div>
+          <p class="rc-foot">NO RECEIPT, NO CLAIM.</p>
+        </div>
+        <figcaption>From a run on the labelled demo sample, which has some facts deliberately out of date.</figcaption>
+      </figure>
     </section>
 
-    <section id="empty" class="panel empty">
-      <h2>Nothing checked yet</h2>
-      <p class="muted">Claims appear one by one with their receipts. Anything without a receipt is flagged, never guessed.</p>
+    <!-- PROBLEM -->
+    <section id="problem" class="band" aria-labelledby="problem-h">
+      <div class="wrap">
+        <h2 id="problem-h">Confident AI text is already getting caught out in public.</h2>
+        <p class="sub">When people paste AI output into reports and emails without checking it, wrong facts and fake references travel with it. Recent cases, as reported:</p>
+        <div class="news">
+          <article class="news-item">
+            <h3>Deloitte Australia</h3>
+            <p>A government report worth A$440,000 was reported to contain references to research that doesn&rsquo;t exist, and a made-up quote from a court judgment. Deloitte agreed to a partial refund.</p>
+            <a href="https://apnews.com/article/australia-ai-errors-deloitte-ab54858680ffc4ae6555b31c8fb987f3" target="_blank" rel="noopener noreferrer">AP News, October 2025</a>
+          </article>
+          <article class="news-item">
+            <h3>EY</h3>
+            <p>EY withdrew a study on loyalty programmes after researchers found apparent AI hallucinations in it.</p>
+            <a href="https://www.afr.com/world/north-america/ey-retracts-study-after-researchers-discover-ai-hallucinations-20260517-p5zxss" target="_blank" rel="noopener noreferrer">Australian Financial Review, May 2026</a>
+          </article>
+          <article class="news-item">
+            <h3>KPMG</h3>
+            <p>KPMG pulled an AI report after its sources were challenged. The detection firm GPTZero said only 5 of the report&rsquo;s 45 citations matched their sources.</p>
+            <a href="https://www.theregister.com/ai-and-ml/2026/06/12/kpmgs-ai-report-turns-into-a-demo-of-ai-hallucinations/5255029" target="_blank" rel="noopener noreferrer">The Register, June 2026</a>
+          </article>
+        </div>
+        <p class="aside">These are press reports, not our findings, and Receipts accuses no one. They show the same failure: confident text with nothing behind it. Receipts is a check you can run before you hit send.</p>
+      </div>
     </section>
 
-    <section id="run" hidden>
-      <div class="strip" aria-live="polite">
-        <span id="progress">Starting</span>
-        <span id="meter" class="muted"></span>
+    <!-- HOW IT WORKS -->
+    <section id="how" class="wrap section" aria-labelledby="how-h">
+      <h2 id="how-h">Follow one claim through</h2>
+      <p class="sub">Say an AI-written briefing contains this sentence.</p>
+      <div class="how-grid">
+      <ol class="story">
+        <li>
+          <span class="num" aria-hidden="true">1</span>
+          <div>
+            <h3>Read</h3>
+            <p>Receipts pulls out every checkable fact: numbers, dates, names.</p>
+            <blockquote class="claim-demo">Amazon has invested <mark>$8 billion</mark> in Anthropic in total.</blockquote>
+          </div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">2</span>
+          <div>
+            <h3>Check</h3>
+            <p>It searches the live web. The AI picks the best source and copies the exact words it relies on. That is only a proposal.</p>
+            <p class="flow"><span>Search the web</span><span class="arrow" aria-hidden="true">&rarr;</span><span>AI proposes a source and a quote</span></p>
+          </div>
+        </li>
+        <li>
+          <span class="num" aria-hidden="true">3</span>
+          <div>
+            <h3>Prove</h3>
+            <p>Plain code, not AI, makes the call. For a claim a source disagrees with, it checks:</p>
+            <ul class="checks">
+              <li class="pass">The source really came back from the search</li>
+              <li class="pass">The quote really appears in that source</li>
+              <li class="pass">The source is about the same company</li>
+              <li class="pass">The quote isn&rsquo;t a rumour or a plan</li>
+            </ul>
+            <p class="outcome bad"><span aria-hidden="true">&#10005;</span> Contradicted: a source says about $18 billion.</p>
+            <p class="small">For a claim to count as supported, code also checks that every number and date in the claim appears in the quote.</p>
+          </div>
+        </li>
+      </ol>
+
+      <aside class="legend-box" aria-labelledby="legend-h">
+        <h3 class="legend-h" id="legend-h">Every claim ends in one of four states</h3>
+        <dl class="legend">
+          <div><dt><span class="status supported">&#10003; Supported</span></dt><dd>A real source states it, and code verified the quote.</dd></div>
+          <div><dt><span class="status contradicted">&#10005; Contradicted</span></dt><dd>A source says something different. The claim is struck out.</dd></div>
+          <div><dt><span class="status forward_looking">&#9719; Plan, not a fact</span></dt><dd>It is about the future, and the source says the same. We don&rsquo;t call it fact.</dd></div>
+          <div><dt><span class="status unverified">? Needs your check</span></dt><dd>No source we could verify. Never guessed; handed back to you.</dd></div>
+        </dl>
+      </aside>
       </div>
-      <div class="counts" id="counts" role="status" hidden></div>
-      <p id="sample-flag" class="note" hidden></p>
-      <div class="cols">
-        <div class="col" id="memory-col">
-          <h2>What the AI says from memory</h2>
-          <details class="memory-box" id="memory-box">
-            <summary>Show the full text</summary>
-            <pre id="memory-text" class="memory"></pre>
+    </section>
+
+    <!-- TRY IT -->
+    <section id="try" class="band try" aria-labelledby="try-h">
+      <div class="wrap">
+        <h2 id="try-h">Try it</h2>
+        <p class="sub">Paste an AI-written briefing, or enter a company and an AI will write one from memory first. Then watch every claim get checked.</p>
+
+        <div class="panel input" id="input">
+          <label for="briefing">Paste an AI-written briefing</label>
+          <textarea id="briefing" rows="6" maxlength="8000" placeholder="Paste the briefing here"></textarea>
+          <div class="row between">
+            <button id="sample" class="linkbtn" type="button">Use the sample briefing</button>
+            <span class="muted" id="chars" aria-live="off"></span>
+          </div>
+          <p id="sample-note" class="note" hidden></p>
+
+          <div class="or" aria-hidden="true"><span>or</span></div>
+
+          <label for="company">Enter a company</label>
+          <div class="row">
+            <input id="company" type="text" maxlength="80" placeholder="e.g. Databricks" autocomplete="off">
+            <span class="chips" id="chips"></span>
+          </div>
+
+          <div class="row between go-row">
+            <button id="go" class="btn primary lg" type="button">Check it</button>
+            <label class="inline small" for="fresh"><input type="checkbox" id="fresh"> Fresh run (ask the models again, no saved replies)</label>
+          </div>
+        </div>
+        <p class="trust">We search the live web and keep only what has a source.</p>
+
+        <section id="run" hidden aria-label="Check in progress">
+          <ol class="steps" id="steps" aria-label="Progress">
+            <li data-step="read"><span class="dot" aria-hidden="true"></span>Read the claims</li>
+            <li data-step="check"><span class="dot" aria-hidden="true"></span>Check each one <span id="step-count" class="muted"></span></li>
+            <li data-step="write"><span class="dot" aria-hidden="true"></span>Write the verified version</li>
+          </ol>
+          <div class="strip" aria-live="polite">
+            <span id="progress">Starting</span>
+            <span id="meter" class="muted"></span>
+          </div>
+
+          <h3 class="verdict-head" id="verdict" hidden></h3>
+          <div class="counts" id="counts" role="status" hidden></div>
+          <p id="sample-flag" class="note" hidden></p>
+
+          <div class="cols">
+            <div class="col paper-col" id="memory-col">
+              <h3 class="col-h">What the AI said</h3>
+              <p class="col-sub">Highlighted sentences have been checked. Click one to see its receipt.</p>
+              <div id="memory-text" class="paper"></div>
+            </div>
+            <div class="col" id="receipts-col">
+              <h3 class="col-h">What survives with receipts</h3>
+              <div id="live-cards" class="stack"></div>
+            </div>
+          </div>
+
+          <details class="trace" id="trace-panel" open>
+            <summary>How was each claim decided?</summary>
+            <ol id="trace"></ol>
           </details>
-          <ul id="claim-chips" class="claim-chips" aria-label="Claims being checked"></ul>
-        </div>
-        <div class="col" id="receipts-col">
-          <h2>What survives with receipts</h2>
-          <div id="live-cards" class="stack"></div>
-        </div>
+        </section>
+
+        <section id="result" hidden aria-label="Result">
+          <div class="panel" id="rewrite" hidden>
+            <h3 class="col-h">The briefing, rewritten with receipts</h3>
+            <div class="tabs" role="tablist">
+              <button id="tab-verified" role="tab" aria-selected="true" class="tab on" type="button">Verified briefing</button>
+              <button id="tab-diff" role="tab" aria-selected="false" class="tab" type="button">What changed</button>
+            </div>
+            <div id="verified"></div>
+            <div id="diff" hidden></div>
+            <div class="row">
+              <button id="copy-md" class="btn primary" type="button">Copy as Markdown</button>
+              <button id="download" class="btn ghost" type="button">Download receipt pack</button>
+              <span id="copy-note" class="muted"></span>
+            </div>
+          </div>
+
+          <div class="panel" id="attack">
+            <h3 class="col-h">Try to break it</h3>
+            <p class="muted">Type any single claim. It goes through the same search, judge and referee steps.</p>
+            <div class="row">
+              <input id="attack-claim" type="text" maxlength="400" placeholder="e.g. Databricks raised $10 billion in 2024">
+              <button id="attack-go" class="btn primary" type="button">Check this claim</button>
+            </div>
+            <div id="attack-out"></div>
+          </div>
+        </section>
       </div>
-      <details class="panel trace" id="trace-panel" open>
-        <summary>Trace: one line per decision</summary>
-        <ol id="trace"></ol>
-      </details>
     </section>
 
-    <section id="result" hidden>
-      <div class="panel" id="rewrite" hidden>
-        <h2>The briefing, rewritten with receipts</h2>
-        <div class="tabs" role="tablist">
-          <button id="tab-verified" role="tab" aria-selected="true" class="tab on" type="button">Verified briefing</button>
-          <button id="tab-diff" role="tab" aria-selected="false" class="tab" type="button">What changed</button>
-        </div>
-        <div id="verified"></div>
-        <div id="diff" hidden></div>
-        <div class="row">
-          <button id="copy-md" class="primary" type="button">Copy as Markdown</button>
-          <button id="download" class="secondary" type="button">Download receipt pack</button>
-          <span id="copy-note" class="muted"></span>
-        </div>
-      </div>
-
-      <div class="panel" id="attack">
-        <h2>Attack mode</h2>
-        <p class="muted">Type any single claim. It goes through the same plan, search, judge and referee steps.</p>
-        <div class="row tight">
-          <input id="attack-claim" type="text" maxlength="400" placeholder="e.g. Databricks raised $10 billion in 2024">
-          <button id="attack-go" class="primary" type="button">Check</button>
-        </div>
-        <div id="attack-out"></div>
-      </div>
+    <!-- LIMITS -->
+    <section class="wrap section" aria-labelledby="limits-h">
+      <h2 id="limits-h">What it can&rsquo;t do (yet)</h2>
+      <p class="sub">We would rather tell you than have you find out.</p>
+      <ul class="limits">
+        <li><b>It checks that a source says it, not that the source is trustworthy.</b> Some receipts come from weak websites.</li>
+        <li><b>It plays safe.</b> It sometimes sends a true claim back to you as &ldquo;needs your check&rdquo;.</li>
+        <li><b>It only knows what the web search returns.</b> No result means no receipt, not &ldquo;false&rdquo;.</li>
+        <li><b>The rewrite check covers numbers and dates,</b> not every word of the prose.</li>
+        <li><b>It doesn&rsquo;t yet check a report&rsquo;s reference list.</b> That is next.</li>
+      </ul>
     </section>
   </main>
+
+  <footer class="foot">
+    <div class="wrap foot-in">
+      <p><b>Receipts</b> &middot; no receipt, no claim. Built over one weekend at the Imperial AI Hackathon 2026, with Anthropic Claude and Linkup live search.</p>
+      <p>
+        <a href="https://github.com/tayibs1/Receipts" target="_blank" rel="noopener noreferrer">Code on GitHub</a>
+        <span aria-hidden="true">&middot;</span>
+        <a href="https://www.figma.com/make/dHUoqohzcu2cfgArIGTi3G/Receipts-Claim-Verification-App" target="_blank" rel="noopener noreferrer">Design in Figma</a>
+      </p>
+    </div>
+  </footer>
 
   <aside id="drawer" class="drawer" role="dialog" aria-modal="false" aria-labelledby="drawer-h" hidden>
     <div class="drawer-head">
       <h2 id="drawer-h">Evidence</h2>
-      <button id="drawer-close" class="link" type="button">Close</button>
+      <button id="drawer-close" class="linkbtn" type="button">Close</button>
     </div>
     <div id="drawer-body"></div>
   </aside>

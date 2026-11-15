@@ -7,3 +7,10 @@ __pycache__/
 .pytest_cache/
 cache/
 audit.jsonl
+
+# demo video build scratch (raw footage, frames, Docker scaffold copies, superseded drafts)
+docs/demo/work/
+docs/demo/chk/
+docs/demo/receipts-demo-final-hq.mp4
+docs/demo/receipts-demo.mp4
+docs/demo/receipts-demo-silent.mp4
