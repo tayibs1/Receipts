@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-14T22:47:03",
+  "generated_at": "2026-11-15T03:04:10",
   "companies": [
     "Anthropic",
     "Databricks",
@@ -26,5 +26,348 @@
     }
   },
   "average_calls_per_run": 42.0,
-  "hand_labels": "pending: no hand labels yet"
+  "hand_labels": {
+    "labelled_claims": 32,
+    "of_total": 32,
+    "label_counts": {
+      "true": 32,
+      "false": 0,
+      "unknowable": 0
+    },
+    "false_positives_supported_but_false": [],
+    "supported_but_unknowable": [],
+    "wrong_contradictions_contradicted_but_true": [],
+    "true_claims": 32,
+    "true_claims_with_receipt": 13,
+    "false_negatives_true_but_unverified": [
+      {
+        "key": "Anthropic|1",
+        "claim": "Anthropic is an AI safety and research company based in San Francisco.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Anthropic|12",
+        "claim": "Anthropic has raised well over $10 billion in total funding.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Anthropic|13",
+        "claim": "Amazon has committed up to $8 billion to Anthropic.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Anthropic|16",
+        "claim": "Anthropic was valued at roughly $18 billion in early 2024.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Anthropic|17",
+        "claim": "Anthropic was reportedly valued at $60 billion or more by 2025.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Databricks|13",
+        "claim": "Databricks has raised well over $10 billion in total.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers or dates in the claim not in the quote: [('num', 10000000000.0)]"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Databricks|14",
+        "claim": "A 2021 Series H round valued Databricks at $38 billion.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers or dates in the claim not in the quote: [('num', 2021.0)]"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Databricks|15",
+        "claim": "Databricks reportedly surpassed a $100 billion valuation in 2025.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Databricks|16",
+        "claim": "Databricks has reported an annualized revenue run rate in the $3 billion-plus range.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "quote covers 43% of the claim's key words, need 50%"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Databricks|17",
+        "claim": "Databricks has reported revenue growth above 50% year over year.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers or dates in the claim not in the quote: [('pct', 50.0)]"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Mistral AI|9",
+        "claim": "Mistral AI raised a seed round of roughly 105M euro in mid-2023.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "quote covers 33% of the claim's key words, need 50%"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Mistral AI|10",
+        "claim": "Mistral AI raised a Series A of around 385M euro in late 2023.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Mistral AI|11",
+        "claim": "Mistral AI's Series A valued the company near 2B dollars.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "quote covers 40% of the claim's key words, need 50%"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "Mistral AI|12",
+        "claim": "A 2024 funding round reportedly valued Mistral AI at about 6B dollars.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "quote covers 33% of the claim's key words, need 50%"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "OpenAI|2",
+        "claim": "OpenAI was founded in December 2015.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers and dates match"
+          ],
+          [
+            "R7",
+            "speculative wording: 'likely'"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "OpenAI|6",
+        "claim": "ChatGPT launched in November 2022.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "OpenAI|13",
+        "claim": "Mira Murati departed OpenAI in 2024.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers and dates match"
+          ],
+          [
+            "R7",
+            "speculative wording: 'will'"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "OpenAI|14",
+        "claim": "Microsoft has committed roughly 13 billion dollars to OpenAI.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R0",
+            "proposal was unverified"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      },
+      {
+        "key": "OpenAI|15",
+        "claim": "OpenAI raised about 6.6 billion dollars in a 2024 funding round.",
+        "verdict": "unverified",
+        "rules": [
+          [
+            "R1",
+            "quote found in source"
+          ],
+          [
+            "R8",
+            "relevance ok"
+          ],
+          [
+            "R2",
+            "numbers or dates in the claim not in the quote: [('num', 2024.0)]"
+          ]
+        ],
+        "label": "true",
+        "notes": ""
+      }
+    ],
+    "false_claims_caught_as_contradicted": 0
+  }
 }

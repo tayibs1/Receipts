@@ -63,7 +63,9 @@ First real-data checkpoint, `eval/results.json`: 4 companies (OpenAI, Databricks
 | Times the judge proposed "supported" | 43 | `eval/results.json` |
 | Kept by the referee / lowered by the referee | 13 / 30 (R8: 18, R2: 7, R7: 4, R1: 1) | `eval/results.json` |
 
-Two later trials on the same 32 claims after referee fixes (`eval/results_fix1.json`, `eval/results_fix2.json`): supported 19 and 14. The spread comes from the models, not from rule changes (the SDK exposes no temperature setting), so **any single number here is noisy**. These counts measure what the referee kept, **not accuracy**: the 32 claims have not yet been hand-labelled, so false-positive and false-negative rates are not measured and no accuracy is claimed. Labels go in `eval/label_sheet.csv`; `eval/score.py` computes the rates once they exist.
+Two later trials on the same 32 claims after referee fixes (`eval/results_fix1.json`, `eval/results_fix2.json`): supported 19 and 14. The spread comes from the models, not from rule changes (the SDK exposes no temperature setting), so **any single number here is noisy**.
+
+**Hand labels (`eval/label_sheet.csv`, scored by `eval/score.py`).** All 32 claims were labelled by hand before seeing any Receipts result, and every one came out "true". That is a real limit of this label set, not a result to be proud of: with no false claims in the sample, **the false-positive rate cannot be measured** — we have no case where the referee should have caught a fabrication and did or didn't. What the labels do show: of the 32 true claims, the referee kept a receipt for 13 (41%) and sent the other 19 (59%) to "needs your check". No true claim was wrongly contradicted, because nothing was contradicted in this run. **No accuracy figure is claimed from this label set.** Measuring false positives needs claims that are actually false, which is what the (not yet built) adversarial benchmark is for.
 
 ## Honest limits
 
