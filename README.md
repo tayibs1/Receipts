@@ -3,7 +3,9 @@
 [![Receipts: no receipt, no claim](docs/demo/receipts-demo-title.png)](docs/demo/receipts-demo-final.mp4)
 *(click the image to watch the 104-second demo, recorded from the running app)*
 
-**Receipts checks an AI-written company briefing against the live web and keeps only the claims that can show a receipt: a real source, and a quote that actually appears in it.** Built for the Imperial AI Hackathon (14-15 Nov 2026), Autonomous Agents track.
+**Receipts checks an AI-written company briefing against the live web and keeps only the claims that can show a receipt: a real source, and a quote that actually appears in it.** Built for the Imperial AI Hackathon (14-15 Nov 2026).
+
+**Track:** Autonomous Agents (main track) · **Bounty:** Best use of Linkup — an agent built around Linkup live web search that researches, verifies and cites its sources · **Extra prize:** Best-Designed AI Product (Figma) — design evidence in [`docs/figma/`](docs/figma/).
 
 > AI briefings do not fail loudly; they fail confidently.
 
