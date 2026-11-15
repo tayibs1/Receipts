@@ -7,7 +7,7 @@ Version history in the file shows each prompt below. Check "Share" before presen
 
 ## What was done, in order (each is a Make prompt)
 
-1. **22:40 First build.** The Receipts brief (`figma-make-prompt.md`, condensed to Make's 2,000-character limit) produced an interactive React app with Briefing, Checking and Results views, shared claim cards, counts bar, evidence drawer and trace.
+1. **22:40 First build.** The Receipts brief (condensed to Make's 2,000-character limit) produced an interactive React app with Briefing, Checking and Results views, shared claim cards, counts bar, evidence drawer and trace.
 2. **22:42 Rewrite and States views, Attack mode.** Verified briefing with footnotes, a draft-versus-verified diff, Copy as Markdown and Download receipt pack, a failed-search banner, a Cached badge, and an empty first-run state.
 3. **22:44 Contrast audit.** Make audited badges, chips, quote highlights and body text against WCAG AA and fixed failures. Its own table listed a cached indicator at 3.52:1 and an empty-state icon at 4.14:1 (not re-checked by us; acceptable only if they count as graphics at 3:1, not text).
 4. **23:19 Consistency fix.** One shared data object so the counts, rewrite and sources agree across views (the first draft said "9 verified claims" on one view and 5 supported on another).
@@ -38,7 +38,7 @@ Version history in the file shows each prompt below. Check "Share" before presen
 - **Sample data is invented** (sources, URLs, quotes are marked "Sample quote"). The citation sample uses real papers (Noy and Zhang 2023, Brynjolfsson, Li and Raymond) plus invented references; no real firm is named.
 - **Citation card inconsistency:** Citation 2 shows a crossed Year chip while its note says the year is within tolerance. The checker spec allows a one-year difference, so the chip should not be crossed.
 - **The built app does not yet have the Report citations view.** It is specified in `knowledge/receipts-citation-mode-spec.md` (workspace, not the repo). Until it exists, do not present the citation screens as working product; show them as design.
-- The unrun refinements from `figma-make-prompt.md` (component variants, Trace readability, noise, mobile) are still not done.
+- The unrun refinements planned for this screen (component variants, Trace readability, noise, mobile) are still not done.
 - **Design and build differ in small ways.** The Make Home has small all-caps labels above headings ("EVIDENCE-FIRST AI CHECKING", "WHY RECEIPTS MATTER"); the live site deliberately has none. The live site also has the progress steps, the paced claim-by-claim reveal and the plain-English reasons, which are not in the design. The build is the more developed of the two.
 - The design's report-citations view is design only; the live site does not have it.
 - Viewport used for all screenshots is 1440 px wide, desktop only.
